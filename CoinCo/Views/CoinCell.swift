@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SDWebImage
+import SDWebImageSVGNativeCoder
 
 class CoinCell: UITableViewCell {
 
@@ -50,6 +52,13 @@ class CoinCell: UITableViewCell {
         self.coin = coin
         
         self.coinLabel.text = coin.name
+        
+        if let url = URL(string: coin.iconURL!) {
+            coinLogo.sd_setImage(with: url, placeholderImage: UIImage(systemName: "questionmark"), options: [], context: nil)
+        } else {
+            coinLogo.image = UIImage(systemName: "questionmark")
+        }
+        
     }
     
     // MARK: - UI Setup

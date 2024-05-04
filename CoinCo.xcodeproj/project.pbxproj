@@ -16,6 +16,7 @@
 		10EFB2822BE663A700938603 /* CoinModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2812BE663A700938603 /* CoinModel.swift */; };
 		10EFB2842BE666CB00938603 /* CoinCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2832BE666CB00938603 /* CoinCell.swift */; };
 		10EFB2862BE6876A00938603 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2852BE6876A00938603 /* DetailController.swift */; };
+		10EFB2912BE6A0D300938603 /* SDWebImageSVGNativeCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 10EFB2902BE6A0D300938603 /* SDWebImageSVGNativeCoder */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10EFB2912BE6A0D300938603 /* SDWebImageSVGNativeCoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,6 +142,9 @@
 			dependencies = (
 			);
 			name = CoinCo;
+			packageProductDependencies = (
+				10EFB2902BE6A0D300938603 /* SDWebImageSVGNativeCoder */,
+			);
 			productName = CoinCo;
 			productReference = 1038AD6F2BE5873B003E352F /* CoinCo.app */;
 			productType = "com.apple.product-type.application";
@@ -168,6 +173,9 @@
 				Base,
 			);
 			mainGroup = 1038AD662BE5873B003E352F;
+			packageReferences = (
+				10EFB28F2BE6A0D300938603 /* XCRemoteSwiftPackageReference "SDWebImageSVGNativeCoder" */,
+			);
 			productRefGroup = 1038AD702BE5873B003E352F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -413,6 +421,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		10EFB28F2BE6A0D300938603 /* XCRemoteSwiftPackageReference "SDWebImageSVGNativeCoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSVGNativeCoder.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		10EFB2902BE6A0D300938603 /* SDWebImageSVGNativeCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 10EFB28F2BE6A0D300938603 /* XCRemoteSwiftPackageReference "SDWebImageSVGNativeCoder" */;
+			productName = SDWebImageSVGNativeCoder;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1038AD672BE5873B003E352F /* Project object */;
 }
