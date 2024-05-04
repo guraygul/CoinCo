@@ -10,7 +10,7 @@ import UIKit
 class DetailController: UIViewController {
 
     // MARK: - Variables
-    private let coin: Coin
+    private let viewModel: DetailControllerViewModel
     
     // MARK: - UI Components
     private let scrollView: UIScrollView = {
@@ -63,7 +63,7 @@ class DetailController: UIViewController {
         label.textColor = .label
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 20, weight: .semibold)
-        label.numberOfLines = 500
+        label.numberOfLines = 0
         return label
     }()
     
@@ -77,8 +77,8 @@ class DetailController: UIViewController {
     }()
     
     // MARK: - LifeCycle
-    init(coin: Coin) {
-        self.coin = coin
+    init(viewModel: DetailControllerViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -91,14 +91,21 @@ class DetailController: UIViewController {
         self.setupUI()
         
         self.view.backgroundColor = .systemBackground
-        self.navigationItem.title = self.coin.name
+        self.navigationItem.title = self.viewModel.coin.name
         self.navigationController?.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: nil, action: nil)
         
-        self.rankLabel.text = String(describing: self.coin.rank)
-        self.priceLabel.text = self.coin.price
-        self.marketCapLabel.text = self.coin.marketCap
-        self.maxSupplyLabel.text = self.coin.the24HVolume
+        self.rankLabel.text = String(describing: self.viewModel.coin.rank)
+        self.priceLabel.text = self.viewModel.coin.price
+        self.marketCapLabel.text = self.viewModel.coin.marketCap
+        self.maxSupplyLabel.text = self.viewModel.coin.the24HVolume
         
+        self.viewModel.onImageLoaded = { [weak self] logoImage in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                self.coinLogo.image = logoImage
+            }
+        }
     }
     
     // MARK: - UI Setup
@@ -136,6 +143,7 @@ class DetailController: UIViewController {
             coinLogo.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20),
             coinLogo.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             coinLogo.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            coinLogo.heightAnchor.constraint(equalToConstant: 200),
             
             vStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             vStack.topAnchor.constraint(equalTo: coinLogo.bottomAnchor, constant: 20),

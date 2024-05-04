@@ -17,6 +17,7 @@
 		10EFB2842BE666CB00938603 /* CoinCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2832BE666CB00938603 /* CoinCell.swift */; };
 		10EFB2862BE6876A00938603 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2852BE6876A00938603 /* DetailController.swift */; };
 		10EFB2912BE6A0D300938603 /* SDWebImageSVGNativeCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 10EFB2902BE6A0D300938603 /* SDWebImageSVGNativeCoder */; };
+		10EFB2932BE6A6F800938603 /* DetailControllerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2922BE6A6F800938603 /* DetailControllerViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		10EFB2812BE663A700938603 /* CoinModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinModel.swift; sourceTree = "<group>"; };
 		10EFB2832BE666CB00938603 /* CoinCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinCell.swift; sourceTree = "<group>"; };
 		10EFB2852BE6876A00938603 /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
+		10EFB2922BE6A6F800938603 /* DetailControllerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailControllerViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 		10EFB27B2BE6577200938603 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				10EFB2922BE6A6F800938603 /* DetailControllerViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 				1038AD772BE5873B003E352F /* HomeController.swift in Sources */,
 				1038AD732BE5873B003E352F /* AppDelegate.swift in Sources */,
 				1038AD752BE5873B003E352F /* SceneDelegate.swift in Sources */,
+				10EFB2932BE6A6F800938603 /* DetailControllerViewModel.swift in Sources */,
 				10EFB2842BE666CB00938603 /* CoinCell.swift in Sources */,
 				10EFB2802BE6596000938603 /* Constants.swift in Sources */,
 			);

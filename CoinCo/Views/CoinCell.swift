@@ -6,8 +6,6 @@
 //
 
 import UIKit
-import SDWebImage
-import SDWebImageSVGNativeCoder
 
 class CoinCell: UITableViewCell {
 
@@ -24,7 +22,6 @@ class CoinCell: UITableViewCell {
         iv.contentMode = .scaleAspectFit
         iv.image = UIImage(systemName: "questionmark")
         iv.tintColor = .black
-        iv.backgroundColor = .systemBlue
         return iv
     }()
     
