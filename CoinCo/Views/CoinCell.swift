@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class CoinCell: UITableViewCell {
 
@@ -13,7 +14,7 @@ class CoinCell: UITableViewCell {
 
     // MARK: - Variables
     
-    private(set) var coin: Coin!
+    private var coin: Coin!
     
     // MARK: - UI Components
     
@@ -50,10 +51,17 @@ class CoinCell: UITableViewCell {
         
         self.coinLabel.text = coin.name
         
-        if let url = URL(string: coin.iconURL!) {
-            coinLogo.sd_setImage(with: url, placeholderImage: UIImage(systemName: "questionmark"), options: [], context: nil)
-        } else {
-            coinLogo.image = UIImage(systemName: "questionmark")
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            
+            if let urlString = self.coin.iconURL, let url = URL(string: urlString) {
+                SDWebImageManager.shared.loadImage(with: url, options: [], context: nil, progress: nil) { [weak self] (image, _, _, _, _, _) in
+                    guard let self = self else { return }
+                    self.coinLogo.image = image
+                }
+            } else {
+                self.coinLogo.image = UIImage(systemName: "questionmark")
+            }
         }
         
     }

@@ -18,6 +18,11 @@
 		10EFB2862BE6876A00938603 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2852BE6876A00938603 /* DetailController.swift */; };
 		10EFB2912BE6A0D300938603 /* SDWebImageSVGNativeCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 10EFB2902BE6A0D300938603 /* SDWebImageSVGNativeCoder */; };
 		10EFB2932BE6A6F800938603 /* DetailControllerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2922BE6A6F800938603 /* DetailControllerViewModel.swift */; };
+		10EFB2962BE6BA2100938603 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2952BE6BA2100938603 /* NetworkManager.swift */; };
+		10EFB2992BE6BAC500938603 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 10EFB2982BE6BAC500938603 /* Alamofire */; };
+		10EFB29B2BE6BAC500938603 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 10EFB29A2BE6BAC500938603 /* AlamofireDynamic */; };
+		10EFB29D2BE6C00800938603 /* CoinService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB29C2BE6C00800938603 /* CoinService.swift */; };
+		10EFB29F2BE6C2D300938603 /* HomeControllerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB29E2BE6C2D300938603 /* HomeControllerViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +38,9 @@
 		10EFB2832BE666CB00938603 /* CoinCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinCell.swift; sourceTree = "<group>"; };
 		10EFB2852BE6876A00938603 /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 		10EFB2922BE6A6F800938603 /* DetailControllerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailControllerViewModel.swift; sourceTree = "<group>"; };
+		10EFB2952BE6BA2100938603 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		10EFB29C2BE6C00800938603 /* CoinService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinService.swift; sourceTree = "<group>"; };
+		10EFB29E2BE6C2D300938603 /* HomeControllerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeControllerViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +49,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				10EFB2912BE6A0D300938603 /* SDWebImageSVGNativeCoder in Frameworks */,
+				10EFB29B2BE6BAC500938603 /* AlamofireDynamic in Frameworks */,
+				10EFB2992BE6BAC500938603 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +76,7 @@
 		1038AD712BE5873B003E352F /* CoinCo */ = {
 			isa = PBXGroup;
 			children = (
+				10EFB2942BE6B9C600938603 /* Network */,
 				10EFB27D2BE6578100938603 /* Models */,
 				10EFB27C2BE6577A00938603 /* Views */,
 				10EFB27B2BE6577200938603 /* ViewModels */,
@@ -100,6 +111,7 @@
 		10EFB27B2BE6577200938603 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				10EFB29E2BE6C2D300938603 /* HomeControllerViewModel.swift */,
 				10EFB2922BE6A6F800938603 /* DetailControllerViewModel.swift */,
 			);
 			path = ViewModels;
@@ -129,6 +141,15 @@
 			path = Constants;
 			sourceTree = "<group>";
 		};
+		10EFB2942BE6B9C600938603 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				10EFB2952BE6BA2100938603 /* NetworkManager.swift */,
+				10EFB29C2BE6C00800938603 /* CoinService.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -147,6 +168,8 @@
 			name = CoinCo;
 			packageProductDependencies = (
 				10EFB2902BE6A0D300938603 /* SDWebImageSVGNativeCoder */,
+				10EFB2982BE6BAC500938603 /* Alamofire */,
+				10EFB29A2BE6BAC500938603 /* AlamofireDynamic */,
 			);
 			productName = CoinCo;
 			productReference = 1038AD6F2BE5873B003E352F /* CoinCo.app */;
@@ -178,6 +201,7 @@
 			mainGroup = 1038AD662BE5873B003E352F;
 			packageReferences = (
 				10EFB28F2BE6A0D300938603 /* XCRemoteSwiftPackageReference "SDWebImageSVGNativeCoder" */,
+				10EFB2972BE6BAC500938603 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 1038AD702BE5873B003E352F /* Products */;
 			projectDirPath = "";
@@ -205,12 +229,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10EFB2962BE6BA2100938603 /* NetworkManager.swift in Sources */,
 				10EFB2822BE663A700938603 /* CoinModel.swift in Sources */,
+				10EFB29D2BE6C00800938603 /* CoinService.swift in Sources */,
 				10EFB2862BE6876A00938603 /* DetailController.swift in Sources */,
 				1038AD772BE5873B003E352F /* HomeController.swift in Sources */,
 				1038AD732BE5873B003E352F /* AppDelegate.swift in Sources */,
 				1038AD752BE5873B003E352F /* SceneDelegate.swift in Sources */,
 				10EFB2932BE6A6F800938603 /* DetailControllerViewModel.swift in Sources */,
+				10EFB29F2BE6C2D300938603 /* HomeControllerViewModel.swift in Sources */,
 				10EFB2842BE666CB00938603 /* CoinCell.swift in Sources */,
 				10EFB2802BE6596000938603 /* Constants.swift in Sources */,
 			);
@@ -435,6 +462,14 @@
 				minimumVersion = 0.2.0;
 			};
 		};
+		10EFB2972BE6BAC500938603 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -442,6 +477,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 10EFB28F2BE6A0D300938603 /* XCRemoteSwiftPackageReference "SDWebImageSVGNativeCoder" */;
 			productName = SDWebImageSVGNativeCoder;
+		};
+		10EFB2982BE6BAC500938603 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 10EFB2972BE6BAC500938603 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		10EFB29A2BE6BAC500938603 /* AlamofireDynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 10EFB2972BE6BAC500938603 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = AlamofireDynamic;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
