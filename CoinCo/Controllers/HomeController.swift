@@ -33,6 +33,8 @@ class HomeController: UIViewController {
 
     // MARK: - UI Setup
     private func setupUI() {
+        self.navigationItem.title = "CoinCo"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
         self.view.backgroundColor = .systemBackground
         
         self.view.addSubview(tableView)
@@ -71,5 +73,9 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.tableView.deselectRow(at: indexPath, animated: true)
+        
+        let coin = self.coins[indexPath.row]
+        let vc = DetailController(coin: coin)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -15,6 +15,7 @@
 		10EFB2802BE6596000938603 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB27F2BE6596000938603 /* Constants.swift */; };
 		10EFB2822BE663A700938603 /* CoinModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2812BE663A700938603 /* CoinModel.swift */; };
 		10EFB2842BE666CB00938603 /* CoinCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2832BE666CB00938603 /* CoinCell.swift */; };
+		10EFB2862BE6876A00938603 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2852BE6876A00938603 /* DetailController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		10EFB27F2BE6596000938603 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		10EFB2812BE663A700938603 /* CoinModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinModel.swift; sourceTree = "<group>"; };
 		10EFB2832BE666CB00938603 /* CoinCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinCell.swift; sourceTree = "<group>"; };
+		10EFB2852BE6876A00938603 /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				1038AD762BE5873B003E352F /* HomeController.swift */,
+				10EFB2852BE6876A00938603 /* DetailController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -192,6 +195,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				10EFB2822BE663A700938603 /* CoinModel.swift in Sources */,
+				10EFB2862BE6876A00938603 /* DetailController.swift in Sources */,
 				1038AD772BE5873B003E352F /* HomeController.swift in Sources */,
 				1038AD732BE5873B003E352F /* AppDelegate.swift in Sources */,
 				1038AD752BE5873B003E352F /* SceneDelegate.swift in Sources */,
