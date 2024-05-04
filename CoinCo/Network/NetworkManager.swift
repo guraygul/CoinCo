@@ -9,7 +9,7 @@ import Foundation
 import Alamofire
 
 final class NetworkManager {
-        
+    
     static let shared: NetworkManager = {
         let instance = NetworkManager()
         return instance
@@ -21,8 +21,7 @@ final class NetworkManager {
         request: URLRequestConvertible,
         decodeType type: T.Type,
         completionHandler: @escaping (Result<T, Error>) -> Void) {
-            AF.request(request).responseData { [weak self] response in
-                guard let self = self else { return }
+            AF.request(request).responseData { response in
                 switch response.result {
                 case .success(let data):
                     do {

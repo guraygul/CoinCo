@@ -99,13 +99,13 @@ class DetailController: UIViewController {
         self.marketCapLabel.text = self.viewModel.coin.marketCap
         self.maxSupplyLabel.text = self.viewModel.coin.the24HVolume
         
-        self.viewModel.onImageLoaded = { [weak self] logoImage in
-            guard let self = self else { return }
-            
-            DispatchQueue.main.async {
-                self.coinLogo.image = logoImage
-            }
+        guard var urlString = self.viewModel.coin.iconURL else { return }
+        
+        if urlString.contains("svg") {
+            urlString = urlString.replacingOccurrences(of: "svg", with: "png")
         }
+        let url = URL(string: urlString)
+        self.coinLogo.sd_setImage(with: url, placeholderImage: UIImage(systemName: "questionmark"), context: nil)
     }
     
     // MARK: - UI Setup

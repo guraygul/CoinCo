@@ -47,23 +47,17 @@ class CoinCell: UITableViewCell {
     }
     
     public func configure(with coin: Coin) {
-        self.coin = coin
         
+        self.coin = coin
         self.coinLabel.text = coin.name
         
-        DispatchQueue.global().async { [weak self] in
-            guard let self = self else { return }
-            
-            if let urlString = self.coin.iconURL, let url = URL(string: urlString) {
-                SDWebImageManager.shared.loadImage(with: url, options: [], context: nil, progress: nil) { [weak self] (image, _, _, _, _, _) in
-                    guard let self = self else { return }
-                    self.coinLogo.image = image
-                }
-            } else {
-                self.coinLogo.image = UIImage(systemName: "questionmark")
-            }
-        }
+        guard var urlString = self.coin.iconURL else { return }
         
+        if urlString.contains("svg") {
+            urlString = urlString.replacingOccurrences(of: "svg", with: "png")
+        }
+        let url = URL(string: urlString)
+        self.coinLogo.sd_setImage(with: url, placeholderImage: UIImage(systemName: "questionmark"), context: nil)        
     }
     
     // MARK: - UI Setup
@@ -85,4 +79,9 @@ class CoinCell: UITableViewCell {
             coinLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor)
         ])
     }
+}
+
+#Preview {
+    let navC = UINavigationController(rootViewController: HomeController())
+    return navC
 }
