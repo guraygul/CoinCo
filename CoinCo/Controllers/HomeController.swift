@@ -10,6 +10,7 @@ import UIKit
 class HomeController: UIViewController {
 
     // MARK: - Variables
+    
     private let viewModel: HomeControllerViewModel
     
     // MARK: - UI Components
@@ -22,6 +23,7 @@ class HomeController: UIViewController {
     
     
     // MARK: - LifeCycle
+    
     init(viewModel: HomeControllerViewModel = HomeControllerViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -47,12 +49,15 @@ class HomeController: UIViewController {
     }
 
     // MARK: - UI Setup
+    
     private func setupUI() {
         self.navigationItem.title = "CoinCo"
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.view.backgroundColor = .systemBackground
         
         self.view.addSubview(tableView)
+        
+        self.tableView.separatorStyle = .none
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -65,6 +70,7 @@ class HomeController: UIViewController {
 }
 
 // MARK: - TableView Functions
+
 extension HomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
