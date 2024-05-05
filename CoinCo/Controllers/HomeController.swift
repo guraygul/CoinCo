@@ -22,17 +22,22 @@ class HomeController: UIViewController {
         return view
     }()
     
-    private let trendingLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Trending"
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        label.textColor = .black
-        return label
+    private let trendingLabel = UILabelFactory(text: "Trending")
+        .fontSize(of: 24)
+        .textColor(with: Theme.accentWhite)
+        .build()
+    
+    private let tableViewContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
     }()
     
     private let tableView: UITableView = {
         let tv = UITableView()
-        tv.backgroundColor = .blue
+        tv.backgroundColor = Theme.backgroundColor
+        tv.layer.masksToBounds = true
+        tv.layer.cornerRadius = 30
         tv.register(CoinCell.self, forCellReuseIdentifier: CoinCell.identifier)
         return tv
     }()
@@ -67,25 +72,42 @@ class HomeController: UIViewController {
     // MARK: - UI Setup
     
     private func setupUI() {
-        self.navigationItem.title = "CoinCo"
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.view.backgroundColor = .systemBackground
+        navigationItem.title = "CoinCo"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        view.backgroundColor = Theme.headerColor
         
+        let appearance = UINavigationBarAppearance()
+        appearance.titleTextAttributes = [.foregroundColor: Theme.accentWhite]
+        appearance.largeTitleTextAttributes = [.foregroundColor: Theme.accentWhite]
+        appearance.backgroundColor = Theme.headerColor
+        
+        navigationItem.standardAppearance = appearance
+        navigationItem.scrollEdgeAppearance = appearance
+        
+        tableViewContainer.layer.cornerRadius = 20
+        tableViewContainer.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        tableViewContainer.backgroundColor = navigationController?.navigationBar.barTintColor
+        
+        tableViewContainer.addSubview(tableView)
+        view.addSubview(tableViewContainer)
         tableView.tableHeaderView = headerView
         headerView.addSubview(trendingLabel)
-        
-        self.view.addSubview(tableView)
         
         tableView.separatorStyle = .none
         tableView.translatesAutoresizingMaskIntoConstraints = false
         headerView.translatesAutoresizingMaskIntoConstraints = false
-        trendingLabel.translatesAutoresizingMaskIntoConstraints = false
+        tableViewContainer.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableViewContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableViewContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableViewContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableViewContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            tableView.topAnchor.constraint(equalTo: tableViewContainer.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: tableViewContainer.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: tableViewContainer.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: tableViewContainer.trailingAnchor),
             
             headerView.topAnchor.constraint(equalTo: tableView.topAnchor),
             headerView.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),

@@ -31,40 +31,26 @@ class CoinCell: UITableViewCell {
         iv.tintColor = .black
         return iv
     }()
+      
+    private let coinLabel = UILabelFactory(text: "Error")
+        .fontSize(of: 22)
+        .textColor(with: Theme.accentWhite)
+        .build()
+        
+    private let coinShortName = UILabelFactory(text: "Error")
+        .fontSize(of: 16)
+        .textColor(with: Theme.accentGrey)
+        .build()
     
-    private let coinLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .label
-        label.lineBreakMode = .byTruncatingTail
-        label.textAlignment = .left
-        label.font = .systemFont(ofSize: 20, weight: .semibold)
-        label.text = "Error"
-        return label
-    }()
+    private let coinPriceLabel = UILabelFactory(text: "Error")
+        .fontSize(of: 20)
+        .textColor(with: Theme.accentWhite)
+        .build()
     
-    private let coinShortName: UILabel = {
-        let label = UILabel()
-        label.textColor = .label
-        label.textAlignment = .left
-        label.font = .systemFont(ofSize: 16, weight: .regular)
-        return label
-    }()
-    
-    private let coinPriceLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .label
-        label.textAlignment = .right
-        label.font = .systemFont(ofSize: 20, weight: .semibold)
-        return label
-    }()
-    
-    private let coinChangeLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .label
-        label.textAlignment = .right
-        label.font = .systemFont(ofSize: 16, weight: .regular)
-        return label
-    }()
+    private let coinChangeLabel = UILabelFactory(text: "Error")
+        .fontSize(of: 16)
+        .textColor(with: Theme.accentGrey)
+        .build()
     
     private let changeImageView: UIImageView = {
         let imageView = UIImageView()
@@ -76,7 +62,7 @@ class CoinCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.contentView.backgroundColor = .blue
+        self.contentView.backgroundColor = Theme.backgroundColor
         self.setupUI()
     }
     
@@ -175,10 +161,6 @@ class CoinCell: UITableViewCell {
         self.logoContainer.addSubview(coinLogo)
         
         coinLogo.translatesAutoresizingMaskIntoConstraints = false
-        coinLabel.translatesAutoresizingMaskIntoConstraints = false
-        coinShortName.translatesAutoresizingMaskIntoConstraints = false
-        coinPriceLabel.translatesAutoresizingMaskIntoConstraints = false
-        coinChangeLabel.translatesAutoresizingMaskIntoConstraints = false
         changeImageView.translatesAutoresizingMaskIntoConstraints = false
         logoContainer.translatesAutoresizingMaskIntoConstraints = false
         

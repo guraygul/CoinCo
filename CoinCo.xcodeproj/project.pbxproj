@@ -24,6 +24,8 @@
 		10EFB29F2BE6C2D300938603 /* HomeControllerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB29E2BE6C2D300938603 /* HomeControllerViewModel.swift */; };
 		10EFB2A22BE6F11300938603 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 10EFB2A12BE6F11300938603 /* SDWebImage */; };
 		10EFB2A52BE7FDDC00938603 /* UIColorHexSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2A42BE7FDDC00938603 /* UIColorHexSupport.swift */; };
+		10EFB2A82BE80BCD00938603 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2A72BE80BCD00938603 /* Theme.swift */; };
+		10EFB2AA2BE80C5100938603 /* UILabelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2A92BE80C5100938603 /* UILabelFactory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,8 @@
 		10EFB29C2BE6C00800938603 /* CoinService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinService.swift; sourceTree = "<group>"; };
 		10EFB29E2BE6C2D300938603 /* HomeControllerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeControllerViewModel.swift; sourceTree = "<group>"; };
 		10EFB2A42BE7FDDC00938603 /* UIColorHexSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorHexSupport.swift; sourceTree = "<group>"; };
+		10EFB2A72BE80BCD00938603 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		10EFB2A92BE80C5100938603 /* UILabelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelFactory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +82,7 @@
 		1038AD712BE5873B003E352F /* CoinCo */ = {
 			isa = PBXGroup;
 			children = (
+				10EFB2A62BE80BC200938603 /* Theme */,
 				10EFB2A32BE7FD5B00938603 /* Helpers */,
 				10EFB2942BE6B9C600938603 /* Network */,
 				10EFB27D2BE6578100938603 /* Models */,
@@ -161,6 +166,15 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		10EFB2A62BE80BC200938603 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				10EFB2A72BE80BCD00938603 /* Theme.swift */,
+				10EFB2A92BE80C5100938603 /* UILabelFactory.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -241,9 +255,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				10EFB2962BE6BA2100938603 /* NetworkManager.swift in Sources */,
+				10EFB2AA2BE80C5100938603 /* UILabelFactory.swift in Sources */,
 				10EFB2822BE663A700938603 /* CoinModel.swift in Sources */,
 				10EFB29D2BE6C00800938603 /* CoinService.swift in Sources */,
 				10EFB2862BE6876A00938603 /* DetailController.swift in Sources */,
+				10EFB2A82BE80BCD00938603 /* Theme.swift in Sources */,
 				1038AD772BE5873B003E352F /* HomeController.swift in Sources */,
 				10EFB2A52BE7FDDC00938603 /* UIColorHexSupport.swift in Sources */,
 				1038AD732BE5873B003E352F /* AppDelegate.swift in Sources */,
