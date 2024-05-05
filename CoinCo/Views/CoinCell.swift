@@ -76,6 +76,7 @@ class CoinCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.contentView.backgroundColor = .blue
         self.setupUI()
     }
     
@@ -87,11 +88,9 @@ class CoinCell: UITableViewCell {
         if let coinColorHex = coin.color?.replacingOccurrences(of: "#", with: "") {
             let hexValue = Int(coinColorHex, radix: 16) ?? 0
             let hexColor = UIColor(rgb: hexValue)
-            print("Hex color: \(hexColor)")
             logoContainer.backgroundColor = hexColor.withAlphaComponent(0.5)
             
-        } else {
-            print("No color provided for coin")
+        } else { // If no color was provided for coin
             logoContainer.backgroundColor = .black.withAlphaComponent(0.5)
         }
     }
@@ -160,7 +159,7 @@ class CoinCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        logoContainer.layer.cornerRadius = logoContainer.frame.height / 2 // Adjust the corner radius to make it rounded
+        logoContainer.layer.cornerRadius = logoContainer.frame.height / 2
     }
     
     // MARK: - UI Setup

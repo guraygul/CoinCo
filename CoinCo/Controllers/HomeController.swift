@@ -8,15 +8,31 @@
 import UIKit
 
 class HomeController: UIViewController {
-
+    
     // MARK: - Variables
     
     private let viewModel: HomeControllerViewModel
     
     // MARK: - UI Components
+    
+    private let headerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .blue
+        view.layer.cornerRadius = 20
+        return view
+    }()
+    
+    private let trendingLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Trending"
+        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        label.textColor = .black
+        return label
+    }()
+    
     private let tableView: UITableView = {
         let tv = UITableView()
-        tv.backgroundColor = .systemBackground
+        tv.backgroundColor = .blue
         tv.register(CoinCell.self, forCellReuseIdentifier: CoinCell.identifier)
         return tv
     }()
@@ -47,7 +63,7 @@ class HomeController: UIViewController {
             }
         }
     }
-
+    
     // MARK: - UI Setup
     
     private func setupUI() {
@@ -55,16 +71,29 @@ class HomeController: UIViewController {
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.view.backgroundColor = .systemBackground
         
+        tableView.tableHeaderView = headerView
+        headerView.addSubview(trendingLabel)
+        
         self.view.addSubview(tableView)
         
-        self.tableView.separatorStyle = .none
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.separatorStyle = .none
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        trendingLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            self.tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            headerView.topAnchor.constraint(equalTo: tableView.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: tableView.trailingAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 70),
+            
+            trendingLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 16),
+            trendingLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16)
         ])
     }
 }
@@ -101,4 +130,9 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
         
         self.navigationController?.pushViewController(vc, animated: true)
     }
+}
+
+#Preview {
+    let navC = UINavigationController(rootViewController: HomeController())
+    return navC
 }
