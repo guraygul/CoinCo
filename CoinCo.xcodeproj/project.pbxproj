@@ -26,6 +26,7 @@
 		10EFB2A52BE7FDDC00938603 /* UIColorHexSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2A42BE7FDDC00938603 /* UIColorHexSupport.swift */; };
 		10EFB2A82BE80BCD00938603 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2A72BE80BCD00938603 /* Theme.swift */; };
 		10EFB2AA2BE80C5100938603 /* UILabelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2A92BE80C5100938603 /* UILabelFactory.swift */; };
+		10EFB2AE2BE823B100938603 /* NavBarBorderRemoveSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EFB2AD2BE823B100938603 /* NavBarBorderRemoveSupport.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		10EFB2A42BE7FDDC00938603 /* UIColorHexSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorHexSupport.swift; sourceTree = "<group>"; };
 		10EFB2A72BE80BCD00938603 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		10EFB2A92BE80C5100938603 /* UILabelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelFactory.swift; sourceTree = "<group>"; };
+		10EFB2AD2BE823B100938603 /* NavBarBorderRemoveSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarBorderRemoveSupport.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				10EFB2A42BE7FDDC00938603 /* UIColorHexSupport.swift */,
+				10EFB2AD2BE823B100938603 /* NavBarBorderRemoveSupport.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10EFB2AE2BE823B100938603 /* NavBarBorderRemoveSupport.swift in Sources */,
 				10EFB2962BE6BA2100938603 /* NetworkManager.swift in Sources */,
 				10EFB2AA2BE80C5100938603 /* UILabelFactory.swift in Sources */,
 				10EFB2822BE663A700938603 /* CoinModel.swift in Sources */,

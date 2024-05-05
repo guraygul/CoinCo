@@ -36,8 +36,8 @@ class HomeController: UIViewController {
     private let tableView: UITableView = {
         let tv = UITableView()
         tv.backgroundColor = Theme.backgroundColor
-        tv.layer.masksToBounds = true
         tv.layer.cornerRadius = 30
+        tv.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         tv.register(CoinCell.self, forCellReuseIdentifier: CoinCell.identifier)
         return tv
     }()
@@ -74,6 +74,8 @@ class HomeController: UIViewController {
     private func setupUI() {
         navigationItem.title = "CoinCo"
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.hideHairline()
+        
         view.backgroundColor = Theme.headerColor
         
         let appearance = UINavigationBarAppearance()
@@ -114,7 +116,7 @@ class HomeController: UIViewController {
             headerView.trailingAnchor.constraint(equalTo: tableView.trailingAnchor),
             headerView.heightAnchor.constraint(equalToConstant: 70),
             
-            trendingLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 16),
+            trendingLabel.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -48),
             trendingLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16)
         ])
     }
