@@ -83,7 +83,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 88
+        return 72
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -9,9 +9,9 @@ import UIKit
 import SDWebImage
 
 class CoinCell: UITableViewCell {
-
+    
     static let identifier = "CoinCell"
-
+    
     // MARK: - Variables
     
     private var coin: Coin!
@@ -29,10 +29,41 @@ class CoinCell: UITableViewCell {
     private let coinLabel: UILabel = {
         let label = UILabel()
         label.textColor = .label
+        label.lineBreakMode = .byTruncatingTail
         label.textAlignment = .left
-        label.font = .systemFont(ofSize: 22, weight: .semibold)
+        label.font = .systemFont(ofSize: 20, weight: .semibold)
         label.text = "Error"
         return label
+    }()
+    
+    private let coinShortName: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .left
+        label.font = .systemFont(ofSize: 16, weight: .regular)
+        return label
+    }()
+    
+    private let coinPriceLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .right
+        label.font = .systemFont(ofSize: 20, weight: .semibold)
+        return label
+    }()
+    
+    private let coinChangeLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .right
+        label.font = .systemFont(ofSize: 16, weight: .regular)
+        return label
+    }()
+    
+    private let changeImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
     
     // MARK: - Lifecycle
@@ -56,8 +87,48 @@ class CoinCell: UITableViewCell {
         if urlString.contains("svg") {
             urlString = urlString.replacingOccurrences(of: "svg", with: "png")
         }
+        
         let url = URL(string: urlString)
-        self.coinLogo.sd_setImage(with: url, placeholderImage: UIImage(systemName: "questionmark"), context: nil)        
+        self.coinLogo.sd_setImage(with: url, placeholderImage: UIImage(systemName: "questionmark"), context: nil)
+        
+        self.coinShortName.text = coin.symbol
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencySymbol = "$"
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        
+        if let priceString = coin.price, let price = Double(priceString) {
+            if let formattedPrice = formatter.string(from: NSNumber(value: price)) {
+                self.coinPriceLabel.text = formattedPrice
+            } else {
+                self.coinPriceLabel.text = "$N/A"
+            }
+        }
+        else {
+            self.coinPriceLabel.text = "$N/A"
+        }
+        
+        if let change = coin.change, let changeDouble = Double(change) {
+            let absChange = abs(changeDouble)
+            if changeDouble > 0 {
+                self.coinChangeLabel.text = "\(absChange)%"
+                self.changeImageView.image = UIImage(systemName: "chevron.up")?.withTintColor(.green, renderingMode: .alwaysOriginal)
+            } else if changeDouble < 0 {
+                self.coinChangeLabel.text = "\(absChange)%"
+                self.changeImageView.image = UIImage(systemName: "chevron.down")?.withTintColor(.red, renderingMode: .alwaysOriginal)
+            } else {
+                self.coinChangeLabel.text = "\(absChange)%"
+                self.changeImageView.image = UIImage(systemName: "chevron.up.chevron.down")?.withTintColor(.gray, renderingMode: .alwaysOriginal)
+                self.changeImageView.image = nil
+            }
+        } else {
+            self.coinChangeLabel.text = "N/A"
+            self.coinChangeLabel.textColor = .black
+            self.changeImageView.image = nil
+        }
+        
     }
     
     // MARK: - UI Setup
@@ -65,18 +136,41 @@ class CoinCell: UITableViewCell {
     private func setupUI() {
         self.addSubview(coinLogo)
         self.addSubview(coinLabel)
+        self.addSubview(coinShortName)
+        self.addSubview(coinPriceLabel)
+        self.addSubview(coinChangeLabel)
+        self.addSubview(changeImageView)
         
         coinLogo.translatesAutoresizingMaskIntoConstraints = false
         coinLabel.translatesAutoresizingMaskIntoConstraints = false
+        coinShortName.translatesAutoresizingMaskIntoConstraints = false
+        coinPriceLabel.translatesAutoresizingMaskIntoConstraints = false
+        coinChangeLabel.translatesAutoresizingMaskIntoConstraints = false
+        changeImageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             coinLogo.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             coinLogo.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor),
-            coinLogo.widthAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.75),
-            coinLogo.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.75),
+            coinLogo.widthAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5),
+            coinLogo.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5),
             
             coinLabel.leadingAnchor.constraint(equalTo: coinLogo.trailingAnchor, constant: 16),
-            coinLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            coinLabel.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor, constant: 4),
+            coinLabel.trailingAnchor.constraint(equalTo: self.centerXAnchor, constant: 92),
+            
+            coinShortName.leadingAnchor.constraint(equalTo: coinLogo.trailingAnchor, constant: 16),
+            coinShortName.topAnchor.constraint(equalTo: self.coinLabel.bottomAnchor, constant: 4),
+            
+            coinPriceLabel.trailingAnchor.constraint(equalTo: self.layoutMarginsGuide.trailingAnchor),
+            coinPriceLabel.centerYAnchor.constraint(equalTo: coinLabel.centerYAnchor),
+            
+            coinChangeLabel.trailingAnchor.constraint(equalTo: self.layoutMarginsGuide.trailingAnchor),
+            coinChangeLabel.centerYAnchor.constraint(equalTo: coinShortName.centerYAnchor),
+            
+            changeImageView.centerYAnchor.constraint(equalTo: coinChangeLabel.centerYAnchor),
+            changeImageView.trailingAnchor.constraint(equalTo: coinChangeLabel.leadingAnchor, constant: -4),
+            changeImageView.widthAnchor.constraint(equalToConstant: 20),
+            changeImageView.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
 }
