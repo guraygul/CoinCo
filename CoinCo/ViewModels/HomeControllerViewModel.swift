@@ -5,13 +5,13 @@
 //  Created by Güray Gül on 4.05.2024.
 //
 
-import Foundation
+import UIKit
 
 class HomeControllerViewModel {
 
     var onCoinsUpdated: (() -> Void)?
     
-    private(set) var coins = [Coin]() {
+    var coins = [Coin]() {
         didSet {
             self.onCoinsUpdated?()
         }

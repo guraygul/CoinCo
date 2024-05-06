@@ -12,6 +12,7 @@ class HomeController: UIViewController {
     // MARK: - Variables
     
     private let viewModel: HomeControllerViewModel
+    private let sortOptions: [String] = ["Price", "Market Cap", "24h Volume", "Change", "Listed At"]
     
     // MARK: - UI Components
     
@@ -22,10 +23,47 @@ class HomeController: UIViewController {
         return view
     }()
     
-    private let trendingLabel = UILabelFactory(text: "Trending")
+    private let rankingListLabel = UILabelFactory(text: "Ranking List")
         .fontSize(of: 24)
         .textColor(with: Theme.accentWhite)
         .build()
+    
+    private lazy var sortButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Sort By", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = Theme.tintColor
+        button.layer.cornerRadius = 20
+        
+        if let downImage = UIImage(systemName: "arrow.down") {
+            button.setImage(downImage, for: .normal)
+            button.tintColor = .white
+        }
+        
+        var configuration = UIButton.Configuration.plain()
+        
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12)
+        button.configuration = configuration
+        
+        button.addTarget(self, action: #selector(showSortOptions), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var sortMenu: UIAlertController = {
+        let alertController = UIAlertController(title: "Sort By", message: nil, preferredStyle: .actionSheet)
+        for option in sortOptions {
+            let action = UIAlertAction(title: option, style: .default) { [weak self] action in
+                self?.sortTableViewBy(option: option)
+            }
+            alertController.addAction(action)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true)
+        return alertController
+    }()
+    
+    
     
     private let tableViewContainer: UIView = {
         let view = UIView()
@@ -93,12 +131,14 @@ class HomeController: UIViewController {
         tableViewContainer.addSubview(tableView)
         view.addSubview(tableViewContainer)
         tableView.tableHeaderView = headerView
-        headerView.addSubview(trendingLabel)
+        headerView.addSubview(rankingListLabel)
+        view.addSubview(sortButton)
         
         tableView.separatorStyle = .none
         tableView.translatesAutoresizingMaskIntoConstraints = false
         headerView.translatesAutoresizingMaskIntoConstraints = false
         tableViewContainer.translatesAutoresizingMaskIntoConstraints = false
+        sortButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             tableViewContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -116,8 +156,11 @@ class HomeController: UIViewController {
             headerView.trailingAnchor.constraint(equalTo: tableView.trailingAnchor),
             headerView.heightAnchor.constraint(equalToConstant: 70),
             
-            trendingLabel.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -48),
-            trendingLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16)
+            rankingListLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 24),
+            rankingListLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 24),
+            
+            sortButton.leadingAnchor.constraint(equalTo: rankingListLabel.trailingAnchor, constant: 122),
+            sortButton.centerYAnchor.constraint(equalTo: rankingListLabel.centerYAnchor)
         ])
     }
 }
@@ -154,7 +197,76 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
         
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    // Show the dropdown menu when the sort button is tapped
+    @objc private func showSortOptions() {
+        let alertController = UIAlertController(title: "Sort By", message: nil, preferredStyle: .actionSheet)
+        for option in sortOptions {
+            let action = UIAlertAction(title: option, style: .default) { [weak self] action in
+                self?.sortTableViewBy(option: option)
+            }
+            alertController.addAction(action)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true)
+    }
+    
+    // Sort the table view data based on the selected option
+    // TODO: Add arrows for ascending sort and descend sort
+    private func sortTableViewBy(option: String) {
+        switch option {
+        case "Price":
+            viewModel.coins.sort { coin1, coin2 in
+                if let price1 = coin1.price, let price2 = coin2.price {
+                    return scientificToDouble(price1) > scientificToDouble(price2)
+                }
+                return false
+            }
+        case "Market Cap":
+            viewModel.coins.sort { coin1, coin2 in
+                if let marketCap1 = coin1.marketCap, let marketCap2 = coin2.marketCap {
+                    return scientificToDouble(marketCap1) > scientificToDouble(marketCap2)
+                }
+                return false
+            }
+        case "24h Volume":
+            viewModel.coins.sort { coin1, coin2 in
+                if let volume1 = coin1.the24HVolume, let volume2 = coin2.the24HVolume {
+                    return scientificToDouble(volume1) > scientificToDouble(volume2)
+                }
+                return false
+            }
+        case "Change":
+            viewModel.coins.sort { coin1, coin2 in
+                if let change1 = coin1.change, let change2 = coin2.change {
+                    return scientificToDouble(change1) > scientificToDouble(change2)
+                }
+                return false
+            }
+        case "Listed At":
+            viewModel.coins.sort { coin1, coin2 in
+                if let listedAt1 = coin1.listedAt, let listedAt2 = coin2.listedAt {
+                    return listedAt1 > listedAt2
+                }
+                return false
+            }
+        default:
+            break
+        }
+        tableView.reloadData()
+    }
+    
+    private func scientificToDouble(_ scientificNumber: String) -> Double {
+        if let doubleValue = Double(scientificNumber) {
+            return doubleValue
+        }
+        return 0.0 // Default value or handle error as needed
+    }
+    
+    
 }
+
 
 #Preview {
     let navC = UINavigationController(rootViewController: HomeController())

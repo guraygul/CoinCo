@@ -74,10 +74,10 @@ class CoinCell: UITableViewCell {
         if let coinColorHex = coin.color?.replacingOccurrences(of: "#", with: "") {
             let hexValue = Int(coinColorHex, radix: 16) ?? 0
             let hexColor = UIColor(rgb: hexValue)
-            logoContainer.backgroundColor = hexColor.withAlphaComponent(0.5)
+            logoContainer.backgroundColor = hexColor.withAlphaComponent(0.2)
             
         } else { // If no color was provided for coin
-            logoContainer.backgroundColor = .black.withAlphaComponent(0.5)
+            logoContainer.backgroundColor = .lightGray.withAlphaComponent(0.2)
         }
     }
     
