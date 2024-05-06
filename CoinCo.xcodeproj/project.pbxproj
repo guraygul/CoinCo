@@ -100,7 +100,6 @@
 		10EFB2792BE6576100938603 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
-				10EFB27E2BE6590F00938603 /* Constants */,
 				1038AD722BE5873B003E352F /* AppDelegate.swift */,
 				1038AD742BE5873B003E352F /* SceneDelegate.swift */,
 				1038AD7B2BE5873C003E352F /* Assets.xcassets */,
@@ -154,6 +153,7 @@
 		10EFB2942BE6B9C600938603 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				10EFB27E2BE6590F00938603 /* Constants */,
 				10EFB2952BE6BA2100938603 /* NetworkManager.swift */,
 				10EFB29C2BE6C00800938603 /* CoinService.swift */,
 			);

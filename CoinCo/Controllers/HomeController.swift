@@ -23,6 +23,8 @@ class HomeController: UIViewController {
         return view
     }()
     
+    // TODO: Add a search bar
+    
     private let rankingListLabel = UILabelFactory(text: "Ranking List")
         .fontSize(of: 24)
         .textColor(with: Theme.accentWhite)
@@ -105,6 +107,11 @@ class HomeController: UIViewController {
                 self.tableView.reloadData()
             }
         }
+    }
+    
+    // TODO: Solve this little bug about navBar Title
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     // MARK: - UI Setup

@@ -33,4 +33,8 @@ class DetailControllerViewModel {
     var maxSupplyLabel: String {
         return "Max Supply: \(String(describing: self.coin.the24HVolume))"
     }
+    
+    var coinChangeLabel: String {
+        return "Change: \(String(describing: self.coin.change))"
+    }
 }
