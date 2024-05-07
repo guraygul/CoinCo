@@ -31,15 +31,6 @@ class DetailController: UIViewController {
         return iv
     }()
     
-    private let rankLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .label
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 20, weight: .semibold)
-        label.text = "Error"
-        return label
-    }()
-    
     private let priceLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
@@ -49,30 +40,12 @@ class DetailController: UIViewController {
         return label
     }()
     
-    private let currentPrice: UILabel = {
+    private let currentPriceLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 16, weight: .light)
         label.text = "Current Price"
-        return label
-    }()
-    
-    private let marketCapLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .label
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 20, weight: .semibold)
-        label.text = "Error"
-        return label
-    }()
-    
-    private let maxSupplyLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .label
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 20, weight: .semibold)
-        label.numberOfLines = 0
         return label
     }()
     
@@ -88,7 +61,7 @@ class DetailController: UIViewController {
         .build()
     
     private lazy var vStack: UIStackView = {
-        let vStack = UIStackView(arrangedSubviews: [lineChartView, rankLabel, marketCapLabel, maxSupplyLabel])
+        let vStack = UIStackView(arrangedSubviews: [lineChartView])
         vStack.axis = .vertical
         vStack.spacing = 12
         vStack.distribution = .fill
@@ -106,7 +79,7 @@ class DetailController: UIViewController {
     }()
     
     private lazy var headerVStack: UIStackView = {
-        let vStack = UIStackView(arrangedSubviews: [currentPrice, priceLabel, headerSubHStack])
+        let vStack = UIStackView(arrangedSubviews: [currentPriceLabel, priceLabel, headerSubHStack])
         vStack.axis = .vertical
         vStack.distribution = .fill
         vStack.alignment = .leading
@@ -129,7 +102,7 @@ class DetailController: UIViewController {
             }
         }
         
-        //            -Sparkline Graph-
+//            -Sparkline Graph-
         override func draw(_ rect: CGRect) {
             super.draw(rect)
             
@@ -139,17 +112,16 @@ class DetailController: UIViewController {
             let minValue = (dataPoints.min() ?? 0.0) / 1.01 // Get the minimum value
             let range = maxValue - minValue
             
-            // Draw horizontal lines
-            let numberOfLines = 5
-            let lineSpacing = rect.height / CGFloat(numberOfLines + 1)
+            let numberOfLines = 5 // Change to accommodate 5 lines + upper and lower bounds
+            let lineSpacing = rect.height / CGFloat(numberOfLines - 1) // Subtract 1 to account for upper bound
             let linePath = UIBezierPath()
-            
-            for i in 1...numberOfLines {
+
+            for i in 0..<numberOfLines {
                 let y = lineSpacing * CGFloat(i)
                 linePath.move(to: CGPoint(x: 0, y: y))
                 linePath.addLine(to: CGPoint(x: rect.width, y: y))
             }
-            
+
             Theme.accentGrey.setStroke()
             linePath.lineWidth = 0.3
             linePath.stroke()
@@ -177,8 +149,6 @@ class DetailController: UIViewController {
     private lazy var lineChartView: LineChartView = {
         let chartView = LineChartView()
         chartView.backgroundColor = .clear
-        chartView.layer.borderColor = Theme.accentGrey.cgColor // Set border color
-        chartView.layer.borderWidth = 0.3 // Set border width
         return chartView
     }()
     
@@ -196,10 +166,7 @@ class DetailController: UIViewController {
         super.viewDidLoad()
         setupUI()
         
-        rankLabel.text = String(describing: viewModel.coin.rank)
         priceLabel.text = viewModel.coin.price
-        marketCapLabel.text = viewModel.coin.marketCap
-        maxSupplyLabel.text = viewModel.coin.the24HVolume
         coinChangeLabel.text = viewModel.coin.change
         
         guard var urlString = viewModel.coin.iconURL else { return }
@@ -325,7 +292,7 @@ class DetailController: UIViewController {
             lineChartView.topAnchor.constraint(equalTo: vStack.topAnchor, constant: 20),
             lineChartView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             lineChartView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            lineChartView.heightAnchor.constraint(equalToConstant: 400)
+            lineChartView.heightAnchor.constraint(equalToConstant: 300)
         ])
     }
     

@@ -18,8 +18,6 @@ class HomeController: UIViewController {
     
     private let headerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .blue
-        view.layer.cornerRadius = 20
         return view
     }()
     
@@ -65,19 +63,15 @@ class HomeController: UIViewController {
         return alertController
     }()
     
-    
-    
     private let tableViewContainer: UIView = {
         let view = UIView()
-        view.backgroundColor = .clear
         return view
     }()
     
     private let tableView: UITableView = {
         let tv = UITableView()
         tv.backgroundColor = Theme.backgroundColor
-        tv.layer.cornerRadius = 30
-        tv.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+        tv.layer.cornerRadius = 20
         tv.register(CoinCell.self, forCellReuseIdentifier: CoinCell.identifier)
         return tv
     }()
@@ -121,8 +115,6 @@ class HomeController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.hideHairline()
         
-        view.backgroundColor = Theme.headerColor
-        
         let appearance = UINavigationBarAppearance()
         appearance.titleTextAttributes = [.foregroundColor: Theme.accentWhite]
         appearance.largeTitleTextAttributes = [.foregroundColor: Theme.accentWhite]
@@ -131,21 +123,22 @@ class HomeController: UIViewController {
         navigationItem.standardAppearance = appearance
         navigationItem.scrollEdgeAppearance = appearance
         
-        tableViewContainer.layer.cornerRadius = 20
-        tableViewContainer.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        tableViewContainer.backgroundColor = navigationController?.navigationBar.barTintColor
+        view.backgroundColor = Theme.headerColor
         
+        //tableViewContainer.backgroundColor = navigationController?.navigationBar.barTintColor
+    
+        headerView.addSubview(rankingListLabel)
+        headerView.addSubview(sortButton)
+        tableView.tableHeaderView = headerView
         tableViewContainer.addSubview(tableView)
         view.addSubview(tableViewContainer)
-        tableView.tableHeaderView = headerView
-        headerView.addSubview(rankingListLabel)
-        view.addSubview(sortButton)
         
         tableView.separatorStyle = .none
         tableView.translatesAutoresizingMaskIntoConstraints = false
         headerView.translatesAutoresizingMaskIntoConstraints = false
         tableViewContainer.translatesAutoresizingMaskIntoConstraints = false
         sortButton.translatesAutoresizingMaskIntoConstraints = false
+        rankingListLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             tableViewContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
