@@ -36,11 +36,13 @@ class HomeController: UIViewController {
         return view
     }()
     
-    private let welcomeLabel = UILabelFactory(text: "Welcome Güray")
+    private let welcomeLabel = UILabelFactory(text: "Welcome, Güray")
         .fontSize(of: 24)
+        .numberOf(lines: 0)
         .textColor(with: Theme.accentWhite)
         .build()
     
+    // TODO: go to https://tr.tradingview.com when pressed
     private lazy var learnMoreButton: UIButton = {
         let button = UIButton()
         button.setTitle("Learn More", for: .normal)
@@ -56,10 +58,25 @@ class HomeController: UIViewController {
         return button
     }()
     
+    private let welcomeImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     private lazy var welcomeVStack: UIStackView = {
         let vStack = UIStackView(arrangedSubviews: [welcomeLabel, learnMoreButton])
         vStack.spacing = 8
         vStack.axis = .vertical
+        vStack.distribution = .fill
+        vStack.alignment = .leading
+        return vStack
+    }()
+    
+    private lazy var welcomeHStack: UIStackView = {
+        let vStack = UIStackView(arrangedSubviews: [welcomeVStack, welcomeImageView])
+        vStack.spacing = 8
+        vStack.axis = .horizontal
         vStack.distribution = .fill
         vStack.alignment = .leading
         return vStack
@@ -150,11 +167,6 @@ class HomeController: UIViewController {
         }
     }
     
-    // TODO: Solve this little bug about navBar Title
-    override func viewWillAppear(_ animated: Bool) {
-        navigationController?.navigationBar.prefersLargeTitles = true
-    }
-    
     // MARK: - UI Setup
     
     private func setupUI() {
@@ -170,13 +182,15 @@ class HomeController: UIViewController {
         navigationItem.standardAppearance = appearance
         navigationItem.scrollEdgeAppearance = appearance
         
-        welcomeView.addSubview(welcomeVStack)
+        welcomeView.addSubview(welcomeHStack)
         sortView.addSubview(sortHStack)
         mainHeaderView.addSubview(welcomeView)
         mainHeaderView.addSubview(sortView)
         
         tableView.tableHeaderView = mainHeaderView
         view.addSubview(tableView)
+        
+        welcomeImageView.image = UIImage(named: "headerImageNew")
         
         tableView.separatorStyle = .none
         
@@ -186,6 +200,7 @@ class HomeController: UIViewController {
         rankingListLabel.translatesAutoresizingMaskIntoConstraints = false
         sortHStack.translatesAutoresizingMaskIntoConstraints = false
         welcomeVStack.translatesAutoresizingMaskIntoConstraints = false
+        welcomeHStack.translatesAutoresizingMaskIntoConstraints = false
         welcomeView.translatesAutoresizingMaskIntoConstraints = false
         sortView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -203,7 +218,10 @@ class HomeController: UIViewController {
             welcomeLabel.leadingAnchor.constraint(equalTo: welcomeView.leadingAnchor, constant: 16),
             welcomeLabel.topAnchor.constraint(equalTo: welcomeView.topAnchor, constant: 16),
             learnMoreButton.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 16),
-            learnMoreButton.bottomAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: -72),
+            learnMoreButton.bottomAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: -48),
+            
+            welcomeImageView.bottomAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: 48),
+            welcomeImageView.trailingAnchor.constraint(equalTo: welcomeView.trailingAnchor, constant: 32),
             
             sortView.topAnchor.constraint(equalTo: welcomeView.bottomAnchor),
             sortView.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor),

@@ -235,7 +235,7 @@ class DetailController: UIViewController {
         view.backgroundColor = Theme.backgroundColor
         
         navigationItem.title = "\(viewModel.coin.name ?? "N/A") (\(viewModel.coin.symbol ?? "N/A"))"
-        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.largeTitleDisplayMode = .never
         navigationController?.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
         
         let appearance = UINavigationBarAppearance()
