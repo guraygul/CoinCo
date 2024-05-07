@@ -16,9 +16,62 @@ class HomeController: UIViewController {
     
     // MARK: - UI Components
     
-    private let headerView: UIView = {
+    private let mainHeaderView: UIView = {
         let view = UIView()
         return view
+    }()
+    
+    private let welcomeView: UIView = {
+        let view = UIView()
+        view.backgroundColor = Theme.headerColor
+        return view
+    }()
+    
+    private let sortView: UIView = {
+        let view = UIView()
+        view.backgroundColor = Theme.backgroundColor
+        view.layer.masksToBounds = false
+        view.layer.cornerRadius = 30
+        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+        return view
+    }()
+    
+    private let welcomeLabel = UILabelFactory(text: "Welcome Güray")
+        .fontSize(of: 24)
+        .textColor(with: Theme.accentWhite)
+        .build()
+    
+    private lazy var learnMoreButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Learn More", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = Theme.tintColor
+        button.layer.cornerRadius = 20
+        
+        var configuration = UIButton.Configuration.plain()
+        
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12)
+        button.configuration = configuration
+        
+        return button
+    }()
+    
+    private lazy var welcomeVStack: UIStackView = {
+        let vStack = UIStackView(arrangedSubviews: [welcomeLabel, learnMoreButton])
+        vStack.spacing = 8
+        vStack.axis = .vertical
+        vStack.distribution = .fill
+        vStack.alignment = .leading
+        return vStack
+    }()
+    
+    private lazy var sortHStack: UIStackView = {
+        let hStack = UIStackView(arrangedSubviews: [rankingListLabel, sortButton])
+        hStack.axis = .horizontal
+        hStack.distribution = .equalSpacing
+        hStack.spacing = 16
+        hStack.alignment = .center
+        return hStack
     }()
     
     // TODO: Add a search bar
@@ -63,15 +116,9 @@ class HomeController: UIViewController {
         return alertController
     }()
     
-    private let tableViewContainer: UIView = {
-        let view = UIView()
-        return view
-    }()
-    
     private let tableView: UITableView = {
         let tv = UITableView()
-        tv.backgroundColor = Theme.backgroundColor
-        tv.layer.cornerRadius = 20
+        tv.backgroundColor = Theme.headerColor
         tv.register(CoinCell.self, forCellReuseIdentifier: CoinCell.identifier)
         return tv
     }()
@@ -123,44 +170,59 @@ class HomeController: UIViewController {
         navigationItem.standardAppearance = appearance
         navigationItem.scrollEdgeAppearance = appearance
         
-        view.backgroundColor = Theme.headerColor
+        welcomeView.addSubview(welcomeVStack)
+        sortView.addSubview(sortHStack)
+        mainHeaderView.addSubview(welcomeView)
+        mainHeaderView.addSubview(sortView)
         
-        //tableViewContainer.backgroundColor = navigationController?.navigationBar.barTintColor
-    
-        headerView.addSubview(rankingListLabel)
-        headerView.addSubview(sortButton)
-        tableView.tableHeaderView = headerView
-        tableViewContainer.addSubview(tableView)
-        view.addSubview(tableViewContainer)
+        tableView.tableHeaderView = mainHeaderView
+        view.addSubview(tableView)
         
         tableView.separatorStyle = .none
+        
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        tableViewContainer.translatesAutoresizingMaskIntoConstraints = false
+        mainHeaderView.translatesAutoresizingMaskIntoConstraints = false
         sortButton.translatesAutoresizingMaskIntoConstraints = false
         rankingListLabel.translatesAutoresizingMaskIntoConstraints = false
+        sortHStack.translatesAutoresizingMaskIntoConstraints = false
+        welcomeVStack.translatesAutoresizingMaskIntoConstraints = false
+        welcomeView.translatesAutoresizingMaskIntoConstraints = false
+        sortView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            tableViewContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableViewContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableViewContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableViewContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mainHeaderView.topAnchor.constraint(equalTo: tableView.topAnchor),
+            mainHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mainHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mainHeaderView.heightAnchor.constraint(equalToConstant: 260),
             
-            tableView.topAnchor.constraint(equalTo: tableViewContainer.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: tableViewContainer.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: tableViewContainer.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: tableViewContainer.trailingAnchor),
+            welcomeView.topAnchor.constraint(equalTo: mainHeaderView.topAnchor),
+            welcomeView.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor),
+            welcomeView.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor),
+            welcomeView.heightAnchor.constraint(equalToConstant: 170),
             
-            headerView.topAnchor.constraint(equalTo: tableView.topAnchor),
-            headerView.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: tableView.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 70),
+            welcomeLabel.leadingAnchor.constraint(equalTo: welcomeView.leadingAnchor, constant: 16),
+            welcomeLabel.topAnchor.constraint(equalTo: welcomeView.topAnchor, constant: 16),
+            learnMoreButton.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 16),
+            learnMoreButton.bottomAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: -72),
             
-            rankingListLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 24),
-            rankingListLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 24),
+            sortView.topAnchor.constraint(equalTo: welcomeView.bottomAnchor),
+            sortView.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor),
+            sortView.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor),
+            sortView.bottomAnchor.constraint(equalTo: mainHeaderView.bottomAnchor),
             
-            sortButton.leadingAnchor.constraint(equalTo: rankingListLabel.trailingAnchor, constant: 122),
-            sortButton.centerYAnchor.constraint(equalTo: rankingListLabel.centerYAnchor)
+            sortHStack.topAnchor.constraint(equalTo: sortView.topAnchor, constant: 16),
+            sortHStack.leadingAnchor.constraint(equalTo: sortView.leadingAnchor),
+            sortHStack.trailingAnchor.constraint(equalTo: sortView.trailingAnchor),
+            
+            rankingListLabel.leadingAnchor.constraint(equalTo: sortView.leadingAnchor, constant: 16),
+            sortButton.trailingAnchor.constraint(equalTo: sortView.trailingAnchor, constant: -16),
+            
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            
+            
         ])
     }
 }

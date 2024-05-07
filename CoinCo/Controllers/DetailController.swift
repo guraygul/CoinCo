@@ -95,6 +95,8 @@ class DetailController: UIViewController {
         return hStack
     }()
     
+    // TODO: Add a learn more button
+    
     class LineChartView: UIView {
         var dataPoints: [Double] = [] {
             didSet {
