@@ -42,10 +42,19 @@ class DetailController: UIViewController {
     
     private let priceLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .label
+        label.textColor = .white
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 20, weight: .semibold)
+        label.font = .systemFont(ofSize: 32, weight: .semibold)
         label.text = "Error"
+        return label
+    }()
+    
+    private let currentPrice: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 16, weight: .light)
+        label.text = "Current Price"
         return label
     }()
     
@@ -79,7 +88,7 @@ class DetailController: UIViewController {
         .build()
     
     private lazy var vStack: UIStackView = {
-        let vStack = UIStackView(arrangedSubviews: [rankLabel, marketCapLabel, maxSupplyLabel])
+        let vStack = UIStackView(arrangedSubviews: [lineChartView, rankLabel, marketCapLabel, maxSupplyLabel])
         vStack.axis = .vertical
         vStack.spacing = 12
         vStack.distribution = .fill
@@ -97,11 +106,80 @@ class DetailController: UIViewController {
     }()
     
     private lazy var headerVStack: UIStackView = {
-        let vStack = UIStackView(arrangedSubviews: [priceLabel, headerSubHStack])
+        let vStack = UIStackView(arrangedSubviews: [currentPrice, priceLabel, headerSubHStack])
         vStack.axis = .vertical
         vStack.distribution = .fill
-        vStack.alignment = .center
+        vStack.alignment = .leading
         return vStack
+    }()
+    
+    private lazy var headerHStack: UIStackView = {
+        let hStack = UIStackView(arrangedSubviews: [headerVStack, coinLogo])
+        hStack.axis = .horizontal
+        hStack.spacing = 16
+        hStack.distribution = .fill
+        hStack.alignment = .center
+        return hStack
+    }()
+    
+    class LineChartView: UIView {
+        var dataPoints: [Double] = [] {
+            didSet {
+                setNeedsDisplay()
+            }
+        }
+        
+        //            -Sparkline Graph-
+        override func draw(_ rect: CGRect) {
+            super.draw(rect)
+            
+            guard !dataPoints.isEmpty else { return }
+            
+            let maxValue = (dataPoints.max() ?? 0.0) * 1.01
+            let minValue = (dataPoints.min() ?? 0.0) / 1.01 // Get the minimum value
+            let range = maxValue - minValue
+            
+            // Draw horizontal lines
+            let numberOfLines = 5
+            let lineSpacing = rect.height / CGFloat(numberOfLines + 1)
+            let linePath = UIBezierPath()
+            
+            for i in 1...numberOfLines {
+                let y = lineSpacing * CGFloat(i)
+                linePath.move(to: CGPoint(x: 0, y: y))
+                linePath.addLine(to: CGPoint(x: rect.width, y: y))
+            }
+            
+            Theme.accentGrey.setStroke()
+            linePath.lineWidth = 0.3
+            linePath.stroke()
+            
+            // Draw graph lines
+            let path = UIBezierPath()
+            path.lineWidth = 5.0
+            Theme.graphLineColor.setStroke()
+            
+            for (index, value) in dataPoints.enumerated() {
+                let x = CGFloat(index) * (rect.width / CGFloat(dataPoints.count - 1))
+                let y = rect.height - CGFloat((value - minValue) / range) * rect.height
+                if index == 0 {
+                    path.move(to: CGPoint(x: x, y: y))
+                } else {
+                    path.addLine(to: CGPoint(x: x, y: y))
+                }
+            }
+            
+            path.stroke()
+        }
+        
+    }
+    
+    private lazy var lineChartView: LineChartView = {
+        let chartView = LineChartView()
+        chartView.backgroundColor = .clear
+        chartView.layer.borderColor = Theme.accentGrey.cgColor // Set border color
+        chartView.layer.borderWidth = 0.3 // Set border width
+        return chartView
     }()
     
     // MARK: - LifeCycle
@@ -118,12 +196,6 @@ class DetailController: UIViewController {
         super.viewDidLoad()
         setupUI()
         
-        view.backgroundColor = .systemBackground
-        navigationItem.title = "\(viewModel.coin.name ?? "N/A") (\(viewModel.coin.symbol ?? "N/A"))"
-        
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: nil, action: nil)
-        
         rankLabel.text = String(describing: viewModel.coin.rank)
         priceLabel.text = viewModel.coin.price
         marketCapLabel.text = viewModel.coin.marketCap
@@ -131,6 +203,11 @@ class DetailController: UIViewController {
         coinChangeLabel.text = viewModel.coin.change
         
         guard var urlString = viewModel.coin.iconURL else { return }
+        
+        if let sparkline = viewModel.coin.sparkline {
+            let values = sparkline.compactMap { Double($0) }
+            lineChartView.dataPoints = values
+        }
         
         // TODO: Create a Helper for image
         
@@ -184,17 +261,32 @@ class DetailController: UIViewController {
     // MARK: - UI Setup
     
     private func setupUI() {
+        
         view.addSubview(scrollView)
+        view.backgroundColor = Theme.backgroundColor
+        
+        navigationItem.title = "\(viewModel.coin.name ?? "N/A") (\(viewModel.coin.symbol ?? "N/A"))"
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.titleTextAttributes = [.foregroundColor: Theme.accentWhite]
+        appearance.backgroundColor = Theme.backgroundColor
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
         scrollView.addSubview(contentView)
+        scrollView.backgroundColor = Theme.backgroundColor
         
         contentView.addSubview(changeImageView)
-        contentView.addSubview(headerVStack)
+        contentView.addSubview(headerHStack)
         contentView.addSubview(vStack)
         
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
         vStack.translatesAutoresizingMaskIntoConstraints = false
-        headerVStack.translatesAutoresizingMaskIntoConstraints = false
+        headerHStack.translatesAutoresizingMaskIntoConstraints = false
         changeImageView.translatesAutoresizingMaskIntoConstraints = false
         
         let height = contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
@@ -216,18 +308,24 @@ class DetailController: UIViewController {
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            headerVStack.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
-            headerVStack.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            headerVStack.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            headerVStack.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            headerVStack.heightAnchor.constraint(equalToConstant: 50),
+            headerHStack.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
+            headerHStack.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 16),
+            headerHStack.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
+            headerHStack.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
+            headerHStack.heightAnchor.constraint(equalToConstant: 80),
+            
+            coinLogo.widthAnchor.constraint(equalTo: headerHStack.heightAnchor),
             
             vStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            vStack.topAnchor.constraint(equalTo: headerVStack.bottomAnchor, constant: 20),
+            vStack.topAnchor.constraint(equalTo: headerHStack.bottomAnchor, constant: 20),
             vStack.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             vStack.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
             vStack.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
             
+            lineChartView.topAnchor.constraint(equalTo: vStack.topAnchor, constant: 20),
+            lineChartView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            lineChartView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            lineChartView.heightAnchor.constraint(equalToConstant: 400)
         ])
     }
     

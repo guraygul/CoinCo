@@ -38,4 +38,10 @@ class Theme {
         blue: 74/255,
         alpha: 1.0
     )
+    static let graphLineColor = UIColor( // #F34188
+        red: 243/255,
+        green: 65/255,
+        blue: 136/255,
+        alpha: 1.0
+    )
 }
