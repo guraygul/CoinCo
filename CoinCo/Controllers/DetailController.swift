@@ -82,7 +82,7 @@ class DetailController: UIViewController {
         let label = UILabel()
         label.textColor = Theme.graphLineColor
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         label.text = "Learn More"
         return label
     }()
@@ -108,7 +108,7 @@ class DetailController: UIViewController {
     private lazy var vStack: UIStackView = {
         let vStack = UIStackView(arrangedSubviews: [lineChartView, learnMoreButton])
         vStack.axis = .vertical
-        vStack.spacing = 32
+        vStack.spacing = 64
         vStack.distribution = .fill
         vStack.alignment = .center
         return vStack

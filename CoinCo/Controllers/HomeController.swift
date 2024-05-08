@@ -14,8 +14,26 @@ class HomeController: UIViewController {
     
     private let viewModel: HomeControllerViewModel
     private let sortOptions: [String] = ["Price", "Market Cap", "24h Volume", "Change", "Listed At"]
+    private var filteredCoins: [Coin] = []
     
     // MARK: - UI Components
+    private let searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        
+        searchBar.searchTextField.attributedPlaceholder =  NSAttributedString.init(string: "Search by name or symbol", attributes: [NSAttributedString.Key.foregroundColor:UIColor.white])
+        searchBar.searchTextField.leftView?.tintColor = .white
+        
+        searchBar.setImage(UIImage(systemName: "x.circle.fill"), for: .clear, state: .normal)
+        searchBar.setImage(UIImage(systemName: "x.circle.fill"), for: .clear, state: .highlighted)
+        
+        searchBar.barTintColor = Theme.backgroundColor
+        searchBar.searchTextField.textColor = .white
+        searchBar.tintColor = .white
+        
+        searchBar.showsCancelButton = true
+        return searchBar
+    }()
+    
     
     private let mainHeaderView: UIView = {
         let view = UIView()
@@ -43,7 +61,6 @@ class HomeController: UIViewController {
         .textColor(with: Theme.accentWhite)
         .build()
     
-    // TODO: go to https://tr.tradingview.com when pressed
     private lazy var learnMoreButton: UIButton = {
         let button = UIButton()
         button.setTitle("Learn More", for: .normal)
@@ -93,8 +110,6 @@ class HomeController: UIViewController {
         return hStack
     }()
     
-    // TODO: Add a search bar
-    
     private let rankingListLabel = UILabelFactory(text: "Ranking List")
         .fontSize(of: 24)
         .textColor(with: Theme.accentWhite)
@@ -137,11 +152,10 @@ class HomeController: UIViewController {
     
     private let tableView: UITableView = {
         let tv = UITableView()
-        tv.backgroundColor = Theme.headerColor
+        tv.backgroundColor = Theme.backgroundColor
         tv.register(CoinCell.self, forCellReuseIdentifier: CoinCell.identifier)
         return tv
     }()
-    
     
     // MARK: - LifeCycle
     
@@ -160,10 +174,14 @@ class HomeController: UIViewController {
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        searchBar.delegate = self
+        
+        searchBar.showsCancelButton = false
         
         self.viewModel.onCoinsUpdated = { [weak self] in
             guard let self = self else { return }
             DispatchQueue.main.async {
+                self.filteredCoins = self.viewModel.coins
                 self.tableView.reloadData()
             }
         }
@@ -188,6 +206,7 @@ class HomeController: UIViewController {
         sortView.addSubview(sortHStack)
         mainHeaderView.addSubview(welcomeView)
         mainHeaderView.addSubview(sortView)
+        mainHeaderView.addSubview(searchBar)
         
         tableView.tableHeaderView = mainHeaderView
         view.addSubview(tableView)
@@ -205,6 +224,7 @@ class HomeController: UIViewController {
         welcomeHStack.translatesAutoresizingMaskIntoConstraints = false
         welcomeView.translatesAutoresizingMaskIntoConstraints = false
         sortView.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             mainHeaderView.topAnchor.constraint(equalTo: tableView.topAnchor),
@@ -220,12 +240,12 @@ class HomeController: UIViewController {
             welcomeLabel.leadingAnchor.constraint(equalTo: welcomeView.leadingAnchor, constant: 16),
             welcomeLabel.topAnchor.constraint(equalTo: welcomeView.topAnchor, constant: 16),
             learnMoreButton.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 16),
-            learnMoreButton.bottomAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: -48),
+            learnMoreButton.bottomAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: -72),
             
-            welcomeImageView.bottomAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: 48),
-            welcomeImageView.trailingAnchor.constraint(equalTo: welcomeView.trailingAnchor, constant: 32),
+            welcomeImageView.bottomAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: 4),
+            welcomeImageView.trailingAnchor.constraint(equalTo: welcomeView.trailingAnchor, constant: 48),
             
-            sortView.topAnchor.constraint(equalTo: welcomeView.bottomAnchor),
+            sortView.topAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: -32),
             sortView.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor),
             sortView.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor),
             sortView.bottomAnchor.constraint(equalTo: mainHeaderView.bottomAnchor),
@@ -240,9 +260,12 @@ class HomeController: UIViewController {
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            
+            searchBar.topAnchor.constraint(equalTo: rankingListLabel.bottomAnchor, constant: 16),
+            searchBar.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor, constant: 16),
+            searchBar.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor, constant: -16),
+            searchBar.bottomAnchor.constraint(equalTo: sortView.bottomAnchor),
         ])
     }
 }
@@ -252,7 +275,7 @@ class HomeController: UIViewController {
 extension HomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.coins.count
+        return filteredCoins.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -260,7 +283,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
             fatalError("Unable to dequeue CoinCell in HomeController")
         }
         
-        let coin = self.viewModel.coins[indexPath.row]
+        let coin = filteredCoins[indexPath.row]
         cell.configure(with: coin)
         
         return cell
@@ -294,7 +317,6 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
         present(alertController, animated: true)
     }
     
-    // Sort the table view data based on the selected option
     // TODO: Add arrows for ascending sort and descend sort
     private func sortTableViewBy(option: String) {
         switch option {
@@ -354,6 +376,49 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
     }
     
 }
+extension HomeController: UISearchBarDelegate {
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filterCoins(with: searchText)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        
+        searchBar.text = nil
+        
+        searchBar.setShowsCancelButton(false, animated: true)
+        searchBar.endEditing(true)
+        searchBar.resignFirstResponder()
+    }
+    
+    private func filterCoins(with searchText: String) {
+        if searchText.isEmpty {
+            // If the search text is empty, show all coins
+            filteredCoins = viewModel.coins
+        } else {
+            // Filter coins based on search text
+            filteredCoins = viewModel.coins.filter { coin in
+                return coin.name?.lowercased().contains(searchText.lowercased()) ?? false ||
+                coin.symbol?.lowercased().contains(searchText.lowercased()) ?? false
+            }
+        }
+        tableView.reloadData()
+    }
+    
+}
+
+extension HomeController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text else { return }
+        filterCoins(with: searchText)
+    }
+
+}
+
 
 
 #Preview {
