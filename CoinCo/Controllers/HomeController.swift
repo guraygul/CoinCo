@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class HomeController: UIViewController {
     
@@ -46,10 +47,11 @@ class HomeController: UIViewController {
     private lazy var learnMoreButton: UIButton = {
         let button = UIButton()
         button.setTitle("Learn More", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = Theme.tintColor
+        button.setTitleColor(Theme.backgroundColor, for: .normal)
+        button.backgroundColor = .white
         button.layer.cornerRadius = 20
         
+        button.addTarget(self, action: #selector(openWithSafari), for: .touchUpInside)
         var configuration = UIButton.Configuration.plain()
         
         configuration.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12)
@@ -344,6 +346,12 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
         return 0.0 // Default value or handle error as needed
     }
     
+    @objc func openWithSafari() {
+        if let url = URL(string: "https://tr.tradingview.com") {
+            let safariController = SFSafariViewController(url: url)
+            present(safariController, animated: true, completion: nil)
+        }
+    }
     
 }
 

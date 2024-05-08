@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class DetailController: UIViewController {
     
@@ -60,10 +61,54 @@ class DetailController: UIViewController {
         .textColor(with: Theme.accentGrey)
         .build()
     
+//    private lazy var learnMoreButton: UIButton = {
+//        let button = UIButton()
+//        button.setTitle("Learn More", for: .normal)
+//        button.setTitleColor(Theme.backgroundColor, for: .normal)
+//        button.backgroundColor = .white
+//        button.layer.cornerRadius = 20
+//        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 35)
+//
+//        button.addTarget(self, action: #selector(openWithSafari), for: .touchUpInside)
+//        var configuration = UIButton.Configuration.plain()
+//        
+//        configuration.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 40, bottom: 16, trailing: 40)
+//        button.configuration = configuration
+//        
+//        return button
+//    }()
+    
+    private let learnMoreLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = Theme.graphLineColor
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        label.text = "Learn More"
+        return label
+    }()
+    
+    private lazy var learnMoreButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 20
+
+        button.addTarget(self, action: #selector(openWithSafari(_:)), for: .touchUpInside)
+        
+        var configuration = UIButton.Configuration.plain()
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 40, bottom: 16, trailing: 40)
+        button.configuration = configuration
+
+        return button
+    }()
+
+    @objc func openWithSafari(_ sender: UIButton) {
+        openWithSafari(urlString: viewModel.coin.coinrankingURL)
+    }
+    
     private lazy var vStack: UIStackView = {
-        let vStack = UIStackView(arrangedSubviews: [lineChartView])
+        let vStack = UIStackView(arrangedSubviews: [lineChartView, learnMoreButton])
         vStack.axis = .vertical
-        vStack.spacing = 12
+        vStack.spacing = 32
         vStack.distribution = .fill
         vStack.alignment = .center
         return vStack
@@ -153,6 +198,13 @@ class DetailController: UIViewController {
         chartView.backgroundColor = .clear
         return chartView
     }()
+    
+    @objc func openWithSafari(urlString: String?) {
+        if let urlString = urlString, let url = URL(string: urlString) {
+            let safariController = SFSafariViewController(url: url)
+            present(safariController, animated: true, completion: nil)
+        }
+    }
     
     // MARK: - LifeCycle
     init(viewModel: DetailControllerViewModel) {
@@ -252,11 +304,14 @@ class DetailController: UIViewController {
         contentView.addSubview(headerHStack)
         contentView.addSubview(vStack)
         
+        learnMoreButton.addSubview(learnMoreLabel)
+        
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
         vStack.translatesAutoresizingMaskIntoConstraints = false
         headerHStack.translatesAutoresizingMaskIntoConstraints = false
         changeImageView.translatesAutoresizingMaskIntoConstraints = false
+        learnMoreLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let height = contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
         height.priority = UILayoutPriority(1)
@@ -294,7 +349,15 @@ class DetailController: UIViewController {
             lineChartView.topAnchor.constraint(equalTo: vStack.topAnchor, constant: 20),
             lineChartView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             lineChartView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            lineChartView.heightAnchor.constraint(equalToConstant: 300)
+            lineChartView.heightAnchor.constraint(equalToConstant: 300),
+            
+            learnMoreButton.topAnchor.constraint(equalTo: lineChartView.bottomAnchor, constant: 64),
+            learnMoreButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            learnMoreButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            learnMoreButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            learnMoreLabel.centerXAnchor.constraint(equalTo: learnMoreButton.centerXAnchor),
+            learnMoreLabel.centerYAnchor.constraint(equalTo: learnMoreButton.centerYAnchor)
         ])
     }
     
