@@ -15,6 +15,7 @@ class HomeController: UIViewController {
     private let viewModel: HomeControllerViewModel
     private let sortOptions: [String] = ["Price", "Market Cap", "24h Volume", "Change", "Listed At"]
     private var filteredCoins: [Coin] = []
+    private var tapGesture: UITapGestureRecognizer!
     
     // MARK: - UI Components
     private let searchBar: UISearchBar = {
@@ -55,6 +56,19 @@ class HomeController: UIViewController {
         return view
     }()
     
+    private let emptyView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
+    
+    private let emptyImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "emptyViewWhite")
+        return imageView
+    }()
+    
     private let welcomeLabel = UILabelFactory(text: "Welcome, Güray")
         .fontSize(of: 24)
         .numberOf(lines: 0)
@@ -80,6 +94,7 @@ class HomeController: UIViewController {
     private let welcomeImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "headerImageNew")
         return imageView
     }()
     
@@ -178,6 +193,14 @@ class HomeController: UIViewController {
         
         searchBar.showsCancelButton = false
         
+        tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        // Add tap gesture recognizer to view
+        view.addGestureRecognizer(tapGesture)
+        // Initially disable tap gesture recognizer
+        tapGesture.isEnabled = false
+        
+        // Set the delegate of the search bar
+        
         self.viewModel.onCoinsUpdated = { [weak self] in
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -202,18 +225,20 @@ class HomeController: UIViewController {
         navigationItem.standardAppearance = appearance
         navigationItem.scrollEdgeAppearance = appearance
         
+        emptyView.isHidden = true
+        emptyView.addSubview(emptyImageView)
+        
         welcomeView.addSubview(welcomeHStack)
         sortView.addSubview(sortHStack)
         mainHeaderView.addSubview(welcomeView)
         mainHeaderView.addSubview(sortView)
         mainHeaderView.addSubview(searchBar)
         
+        tableView.backgroundView = emptyView
         tableView.tableHeaderView = mainHeaderView
-        view.addSubview(tableView)
-        
-        welcomeImageView.image = UIImage(named: "headerImageNew")
-        
         tableView.separatorStyle = .none
+        
+        view.addSubview(tableView)
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         mainHeaderView.translatesAutoresizingMaskIntoConstraints = false
@@ -225,6 +250,8 @@ class HomeController: UIViewController {
         welcomeView.translatesAutoresizingMaskIntoConstraints = false
         sortView.translatesAutoresizingMaskIntoConstraints = false
         searchBar.translatesAutoresizingMaskIntoConstraints = false
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
+        emptyImageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             mainHeaderView.topAnchor.constraint(equalTo: tableView.topAnchor),
@@ -240,7 +267,8 @@ class HomeController: UIViewController {
             welcomeLabel.leadingAnchor.constraint(equalTo: welcomeView.leadingAnchor, constant: 16),
             welcomeLabel.topAnchor.constraint(equalTo: welcomeView.topAnchor, constant: 16),
             learnMoreButton.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 16),
-            learnMoreButton.bottomAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: -72),
+            learnMoreButton.heightAnchor.constraint(equalToConstant: 40),
+            learnMoreButton.bottomAnchor.constraint(greaterThanOrEqualTo: welcomeView.bottomAnchor, constant: -76),
             
             welcomeImageView.bottomAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: 4),
             welcomeImageView.trailingAnchor.constraint(equalTo: welcomeView.trailingAnchor, constant: 48),
@@ -263,9 +291,20 @@ class HomeController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
             searchBar.topAnchor.constraint(equalTo: rankingListLabel.bottomAnchor, constant: 16),
-            searchBar.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor, constant: 16),
-            searchBar.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor, constant: -16),
+            searchBar.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor, constant: 8),
+            searchBar.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor, constant: -8),
             searchBar.bottomAnchor.constraint(equalTo: sortView.bottomAnchor),
+            
+            emptyView.topAnchor.constraint(equalTo: mainHeaderView.bottomAnchor),
+            emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            // Constraints for emptyImageView
+            emptyImageView.centerXAnchor.constraint(equalTo: emptyView.centerXAnchor),
+            emptyImageView.centerYAnchor.constraint(equalTo: emptyView.centerYAnchor),
+            emptyImageView.leadingAnchor.constraint(equalTo: emptyView.leadingAnchor, constant: 8),
+            emptyImageView.trailingAnchor.constraint(equalTo: emptyView.trailingAnchor, constant: 8),
         ])
     }
 }
@@ -365,7 +404,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
         if let doubleValue = Double(scientificNumber) {
             return doubleValue
         }
-        return 0.0 // Default value or handle error as needed
+        return 0.0
     }
     
     @objc func openWithSafari() {
@@ -380,6 +419,11 @@ extension HomeController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
+        tapGesture.isEnabled = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        tapGesture.isEnabled = false
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -387,26 +431,38 @@ extension HomeController: UISearchBarDelegate {
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        
         searchBar.text = nil
         
         searchBar.setShowsCancelButton(false, animated: true)
         searchBar.endEditing(true)
         searchBar.resignFirstResponder()
+        
+        filteredCoins = viewModel.coins
+        tableView.reloadData()
+        emptyView.isHidden = !filteredCoins.isEmpty
     }
+    
     
     private func filterCoins(with searchText: String) {
         if searchText.isEmpty {
-            // If the search text is empty, show all coins
             filteredCoins = viewModel.coins
         } else {
-            // Filter coins based on search text
             filteredCoins = viewModel.coins.filter { coin in
                 return coin.name?.lowercased().contains(searchText.lowercased()) ?? false ||
                 coin.symbol?.lowercased().contains(searchText.lowercased()) ?? false
             }
         }
         tableView.reloadData()
+        emptyView.isHidden = !filteredCoins.isEmpty
+        
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        searchBar.resignFirstResponder()
+    }
+    
+    @objc private func dismissKeyboard() {
+        searchBar.resignFirstResponder()
     }
     
 }
@@ -416,10 +472,8 @@ extension HomeController: UISearchResultsUpdating {
         guard let searchText = searchController.searchBar.text else { return }
         filterCoins(with: searchText)
     }
-
+    
 }
-
-
 
 #Preview {
     let navC = UINavigationController(rootViewController: HomeController())
