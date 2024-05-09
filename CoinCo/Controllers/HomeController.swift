@@ -8,7 +8,7 @@
 import UIKit
 import SafariServices
 
-class HomeController: UIViewController {
+class HomeController: UIViewController, WelcomeViewDelegate {
     
     // MARK: - Variables
     
@@ -16,6 +16,7 @@ class HomeController: UIViewController {
     private let sortOptions: [String] = ["Price", "Market Cap", "24h Volume", "Change", "Listed At"]
     private var filteredCoins: [Coin] = []
     private var tapGesture: UITapGestureRecognizer!
+    private lazy var welcomeView = WelcomeView()
     
     // MARK: - UI Components
     private let searchBar: UISearchBar = {
@@ -38,10 +39,6 @@ class HomeController: UIViewController {
     private let mainHeaderView = UIViewFactory()
         .build()
     
-    private let welcomeView = UIViewFactory()
-        .backgroundColor(Theme.headerColor)
-        .build()
-    
     private let sortView = UIViewFactory()
         .backgroundColor(Theme.backgroundColor)
         .cornerRadius(30)
@@ -53,43 +50,6 @@ class HomeController: UIViewController {
         .build()
     
     private let emptyImageView = UIImageViewFactory(image: UIImage(named: "emptyViewWhite"))
-        .build()
-    
-    private let welcomeLabel = UILabelFactory(text: "Welcome, Güray")
-        .fontSize(of: 24, weight: .regular)
-        .numberOf(lines: 0)
-        .textColor(with: Theme.accentWhite)
-        .build()
-    
-    private lazy var learnMoreButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Learn More", for: .normal)
-        button.setTitleColor(Theme.backgroundColor, for: .normal)
-        button.backgroundColor = .white
-        button.layer.cornerRadius = 20
-        
-        button.addTarget(self, action: #selector(openWithSafari), for: .touchUpInside)
-        var configuration = UIButton.Configuration.plain()
-        
-        configuration.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12)
-        button.configuration = configuration
-        
-        return button
-    }()
-    
-    private let welcomeImageView = UIImageViewFactory(image: UIImage(named: "headerImageNew"))
-        .build()
-    
-    private lazy var welcomeVStack = UIStackViewFactory(axis: .vertical)
-        .addArrangedSubview(welcomeLabel)
-        .addArrangedSubview(learnMoreButton)
-        .alignment(.leading)
-        .build()
-    
-    private lazy var welcomeHStack = UIStackViewFactory(axis: .horizontal)
-        .addArrangedSubview(welcomeVStack)
-        .addArrangedSubview(welcomeImageView)
-        .alignment(.leading)
         .build()
     
     private lazy var sortHStack = UIStackViewFactory(axis: .horizontal)
@@ -166,6 +126,7 @@ class HomeController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
+        welcomeView.delegate = self
         
         tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
@@ -239,23 +200,13 @@ class HomeController: UIViewController {
             emptyImageView.trailingAnchor.constraint(equalTo: emptyView.trailingAnchor, constant: 8)
         ])
         
-        welcomeView.addSubview(welcomeHStack)
+        welcomeView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             welcomeView.topAnchor.constraint(equalTo: mainHeaderView.topAnchor),
             welcomeView.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor),
             welcomeView.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor),
-            welcomeView.heightAnchor.constraint(equalToConstant: 170),
-            
-            welcomeLabel.leadingAnchor.constraint(equalTo: welcomeView.leadingAnchor, constant: 16),
-            welcomeLabel.topAnchor.constraint(equalTo: welcomeView.topAnchor, constant: 16),
-            
-            learnMoreButton.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 16),
-            learnMoreButton.heightAnchor.constraint(equalToConstant: 40),
-            learnMoreButton.bottomAnchor.constraint(greaterThanOrEqualTo: welcomeView.bottomAnchor, constant: -76),
-            
-            welcomeImageView.bottomAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: 4),
-            welcomeImageView.trailingAnchor.constraint(equalTo: welcomeView.trailingAnchor, constant: 48)
+            welcomeView.heightAnchor.constraint(equalToConstant: 170)
         ])
         
         sortView.addSubview(sortHStack)
@@ -383,7 +334,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
         return 0.0
     }
     
-    @objc func openWithSafari() {
+    func openSafari() {
         if let url = URL(string: "https://tr.tradingview.com") {
             let safariController = SFSafariViewController(url: url)
             present(safariController, animated: true, completion: nil)
