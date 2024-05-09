@@ -8,7 +8,7 @@
 import UIKit
 import SafariServices
 
-class HomeController: UIViewController, WelcomeViewDelegate {
+class HomeController: UIViewController, WelcomeViewDelegate, SortViewDelegate {
     
     // MARK: - Variables
     
@@ -16,13 +16,15 @@ class HomeController: UIViewController, WelcomeViewDelegate {
     private let sortOptions: [String] = ["Price", "Market Cap", "24h Volume", "Change", "Listed At"]
     private var filteredCoins: [Coin] = []
     private var tapGesture: UITapGestureRecognizer!
+    
     private lazy var welcomeView = WelcomeView()
+    private lazy var sortView = SortView()
     
     // MARK: - UI Components
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         
-        searchBar.searchTextField.attributedPlaceholder =  NSAttributedString.init(string: "Search by name or symbol", attributes: [NSAttributedString.Key.foregroundColor:UIColor.white])
+        searchBar.searchTextField.attributedPlaceholder =  NSAttributedString.init(string: "Search by name or symbol", attributes: [NSAttributedString.Key.foregroundColor: Theme.accentGrey])
         searchBar.searchTextField.leftView?.tintColor = .white
         
         searchBar.setImage(UIImage(systemName: "x.circle.fill"), for: .clear, state: .normal)
@@ -39,65 +41,12 @@ class HomeController: UIViewController, WelcomeViewDelegate {
     private let mainHeaderView = UIViewFactory()
         .build()
     
-    private let sortView = UIViewFactory()
-        .backgroundColor(Theme.backgroundColor)
-        .cornerRadius(30)
-        .maskedCorners(.layerMaxXMinYCorner, .layerMinXMinYCorner)
-        .build()
-    
     private let emptyView = UIViewFactory()
         .backgroundColor(.clear)
         .build()
     
     private let emptyImageView = UIImageViewFactory(image: UIImage(named: "emptyViewWhite"))
         .build()
-    
-    private lazy var sortHStack = UIStackViewFactory(axis: .horizontal)
-        .addArrangedSubview(rankingListLabel)
-        .addArrangedSubview(sortButton)
-        .distribution(.equalSpacing)
-        .alignment(.center)
-        .build()
-    
-    private let rankingListLabel = UILabelFactory(text: "Ranking List")
-        .fontSize(of: 24, weight: .semibold)
-        .textColor(with: Theme.accentWhite)
-        .build()
-    
-    private lazy var sortButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Sort By", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = Theme.tintColor
-        button.layer.cornerRadius = 20
-        
-        if let downImage = UIImage(systemName: "arrow.down") {
-            button.setImage(downImage, for: .normal)
-            button.tintColor = .white
-        }
-        
-        var configuration = UIButton.Configuration.plain()
-        
-        configuration.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12)
-        button.configuration = configuration
-        
-        button.addTarget(self, action: #selector(showSortOptions), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var sortMenu: UIAlertController = {
-        let alertController = UIAlertController(title: "Sort By", message: nil, preferredStyle: .actionSheet)
-        for option in sortOptions {
-            let action = UIAlertAction(title: option, style: .default) { [weak self] action in
-                self?.sortTableViewBy(option: option)
-            }
-            alertController.addAction(action)
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        alertController.addAction(cancelAction)
-        self.present(alertController, animated: true)
-        return alertController
-    }()
     
     private let tableView: UITableView = {
         let tv = UITableView()
@@ -127,6 +76,7 @@ class HomeController: UIViewController, WelcomeViewDelegate {
         tableView.dataSource = self
         searchBar.delegate = self
         welcomeView.delegate = self
+        sortView.delegate = self
         
         tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
@@ -209,30 +159,23 @@ class HomeController: UIViewController, WelcomeViewDelegate {
             welcomeView.heightAnchor.constraint(equalToConstant: 170)
         ])
         
-        sortView.addSubview(sortHStack)
-        
-        sortButton.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        sortView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             sortView.topAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: -32),
             sortView.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor),
             sortView.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor),
-            sortView.bottomAnchor.constraint(equalTo: mainHeaderView.bottomAnchor),
-            
-            sortHStack.topAnchor.constraint(equalTo: sortView.topAnchor, constant: 16),
-            sortHStack.leadingAnchor.constraint(equalTo: sortView.leadingAnchor),
-            sortHStack.trailingAnchor.constraint(equalTo: sortView.trailingAnchor),
-            
-            rankingListLabel.leadingAnchor.constraint(equalTo: sortView.leadingAnchor, constant: 16),
-            sortButton.trailingAnchor.constraint(equalTo: sortView.trailingAnchor, constant: -16),
-            
-            searchBar.topAnchor.constraint(equalTo: rankingListLabel.bottomAnchor, constant: 16),
+            sortView.bottomAnchor.constraint(equalTo: mainHeaderView.bottomAnchor)
+        ])
+        
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
             searchBar.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor, constant: 8),
             searchBar.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor, constant: -8),
-            searchBar.bottomAnchor.constraint(equalTo: sortView.bottomAnchor)
-            
+            searchBar.bottomAnchor.constraint(equalTo: mainHeaderView.bottomAnchor)
         ])
+        
     }
 }
 
@@ -270,7 +213,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
     }
     
     // Show the dropdown menu when the sort button is tapped
-    @objc private func showSortOptions() {
+    internal func showSortOptions() {
         let alertController = UIAlertController(title: "Sort By", message: nil, preferredStyle: .actionSheet)
         for option in sortOptions {
             let action = UIAlertAction(title: option, style: .default) { [weak self] action in
@@ -334,7 +277,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
         return 0.0
     }
     
-    func openSafari() {
+    internal func openSafari() {
         if let url = URL(string: "https://tr.tradingview.com") {
             let safariController = SFSafariViewController(url: url)
             present(safariController, animated: true, completion: nil)

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SafariServices
 
 protocol WelcomeViewDelegate: AnyObject {
     func openSafari()

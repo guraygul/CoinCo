@@ -11,6 +11,7 @@
 		1002D3BE2BECF93400F56FDA /* UIViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1002D3BD2BECF93400F56FDA /* UIViewFactory.swift */; };
 		1002D3C02BECF9C100F56FDA /* UIImageViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1002D3BF2BECF9C100F56FDA /* UIImageViewFactory.swift */; };
 		1002D3C22BED1B4400F56FDA /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1002D3C12BED1B4400F56FDA /* WelcomeView.swift */; };
+		1002D3C42BED440C00F56FDA /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1002D3C32BED440C00F56FDA /* SortView.swift */; };
 		1038AD732BE5873B003E352F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1038AD722BE5873B003E352F /* AppDelegate.swift */; };
 		1038AD752BE5873B003E352F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1038AD742BE5873B003E352F /* SceneDelegate.swift */; };
 		1038AD772BE5873B003E352F /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1038AD762BE5873B003E352F /* HomeController.swift */; };
@@ -38,6 +39,7 @@
 		1002D3BD2BECF93400F56FDA /* UIViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewFactory.swift; sourceTree = "<group>"; };
 		1002D3BF2BECF9C100F56FDA /* UIImageViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewFactory.swift; sourceTree = "<group>"; };
 		1002D3C12BED1B4400F56FDA /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		1002D3C32BED440C00F56FDA /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
 		1038AD6F2BE5873B003E352F /* CoinCo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoinCo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1038AD722BE5873B003E352F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1038AD742BE5873B003E352F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -137,8 +139,9 @@
 		10EFB27C2BE6577A00938603 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				10EFB2832BE666CB00938603 /* CoinCell.swift */,
 				1002D3C12BED1B4400F56FDA /* WelcomeView.swift */,
+				10EFB2832BE666CB00938603 /* CoinCell.swift */,
+				1002D3C32BED440C00F56FDA /* SortView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -273,6 +276,7 @@
 				10EFB2962BE6BA2100938603 /* NetworkManager.swift in Sources */,
 				10EFB2AA2BE80C5100938603 /* UILabelFactory.swift in Sources */,
 				10EFB2822BE663A700938603 /* CoinModel.swift in Sources */,
+				1002D3C42BED440C00F56FDA /* SortView.swift in Sources */,
 				10EFB29D2BE6C00800938603 /* CoinService.swift in Sources */,
 				10EFB2862BE6876A00938603 /* DetailController.swift in Sources */,
 				10EFB2A82BE80BCD00938603 /* Theme.swift in Sources */,
