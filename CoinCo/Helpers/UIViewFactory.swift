@@ -32,6 +32,11 @@ final class UIViewFactory {
         return self
     }
     
+    func maskedCorners(_ cornerOne: CACornerMask, _ cornerTwo: CACornerMask) -> Self {
+        view.layer.maskedCorners = [cornerOne, cornerTwo]
+        return self
+    }
+    
     func borderWidth(_ width: CGFloat) -> Self {
         view.layer.borderWidth = width
         return self

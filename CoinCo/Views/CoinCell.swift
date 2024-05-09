@@ -41,33 +41,31 @@ class CoinCell: UITableViewCell {
         .cornerRadius(10)
         .build()
     
-    let coinLogo = UIImageViewFactory(image: UIImage(systemName: "questionmark"))
-        .contentMode(.scaleAspectFit)
+    private let coinLogo = UIImageViewFactory(image: UIImage(systemName: "questionmark"))
         .tintColor(.black)
         .build()
     
     private let coinLabel = UILabelFactory(text: "Error")
-        .fontSize(of: 22)
+        .fontSize(of: 22, weight: .medium)
         .textColor(with: Theme.accentWhite)
         .build()
     
     private let coinShortName = UILabelFactory(text: "Error")
-        .fontSize(of: 16)
+        .fontSize(of: 16, weight: .semibold)
         .textColor(with: Theme.accentGrey)
         .build()
     
     private let coinPriceLabel = UILabelFactory(text: "Error")
-        .fontSize(of: 20)
+        .fontSize(of: 20, weight: .semibold)
         .textColor(with: Theme.accentWhite)
         .build()
     
     private let coinChangeLabel = UILabelFactory(text: "Error")
-        .fontSize(of: 16)
+        .fontSize(of: 16, weight: .semibold)
         .textColor(with: Theme.accentGrey)
         .build()
     
-    let changeImageView = UIImageViewFactory()
-        .contentMode(.scaleAspectFit)
+    private let changeImageView = UIImageViewFactory()
         .build()
     
     // MARK: - Lifecycle
@@ -189,7 +187,8 @@ class CoinCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             coinPriceVStack.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
-            coinPriceVStack.centerYAnchor.constraint(equalTo: centerYAnchor)
+            coinPriceVStack.centerYAnchor.constraint(equalTo: centerYAnchor),
+            coinPriceVStack.leadingAnchor.constraint(equalTo: coinLabelVStack.trailingAnchor, constant: 16)
         ])
     }
 }

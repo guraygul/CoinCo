@@ -19,128 +19,82 @@ class DetailController: UIViewController {
         return sv
     }()
     
-    private let contentView: UIView = {
-        let view = UIView()
-        return view
-    }()
+    private let contentView = UIViewFactory()
+        .build()
     
-    private let coinLogo: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        iv.image = UIImage(systemName: "questionmark")
-        iv.tintColor = .label
-        return iv
-    }()
+    private let coinLogo = UIImageViewFactory(image: UIImage(systemName: "questionmark"))
+        .contentMode(.scaleAspectFit)
+        .build()
     
-    private let priceLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 32, weight: .semibold)
-        label.text = "Error"
-        return label
-    }()
+    private let priceLabel = UILabelFactory(text: "Error")
+        .textColor(with: .white)
+        .fontSize(of: 32, weight: .bold)
+        .build()
     
-    private let currentPriceLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 16, weight: .light)
-        label.text = "Current Price"
-        return label
-    }()
+    private let currentPriceLabel = UILabelFactory(text: "Current Price")
+        .textColor(with: .white)
+        .fontSize(of: 16, weight: .light)
+        .build()
     
-    private let changeImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
+    private let changeImageView = UIImageViewFactory()
+        .build()
     
     private let coinChangeLabel = UILabelFactory(text: "Error")
-        .fontSize(of: 16)
+        .fontSize(of: 16, weight: .semibold)
         .textColor(with: Theme.accentGrey)
         .build()
     
-//    private lazy var learnMoreButton: UIButton = {
-//        let button = UIButton()
-//        button.setTitle("Learn More", for: .normal)
-//        button.setTitleColor(Theme.backgroundColor, for: .normal)
-//        button.backgroundColor = .white
-//        button.layer.cornerRadius = 20
-//        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 35)
-//
-//        button.addTarget(self, action: #selector(openWithSafari), for: .touchUpInside)
-//        var configuration = UIButton.Configuration.plain()
-//        
-//        configuration.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 40, bottom: 16, trailing: 40)
-//        button.configuration = configuration
-//        
-//        return button
-//    }()
-    
-    private let learnMoreLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = Theme.graphLineColor
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        label.text = "Learn More"
-        return label
-    }()
+    private let learnMoreLabel = UILabelFactory(text: "Learn More")
+        .fontSize(of: 20, weight: .bold)
+        .textColor(with: Theme.graphLineColor)
+        .build()
     
     private lazy var learnMoreButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .white
         button.layer.cornerRadius = 20
-
+        
         button.addTarget(self, action: #selector(openWithSafari(_:)), for: .touchUpInside)
         
         var configuration = UIButton.Configuration.plain()
         configuration.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 40, bottom: 16, trailing: 40)
         button.configuration = configuration
-
+        
         return button
     }()
-
+    
     @objc func openWithSafari(_ sender: UIButton) {
         openWithSafari(urlString: viewModel.coin.coinrankingURL)
     }
     
-    private lazy var vStack: UIStackView = {
-        let vStack = UIStackView(arrangedSubviews: [lineChartView, learnMoreButton])
-        vStack.axis = .vertical
-        vStack.spacing = 64
-        vStack.distribution = .fill
-        vStack.alignment = .center
-        return vStack
-    }()
+    private lazy var vStack = UIStackViewFactory(axis: .vertical)
+        .addArrangedSubview(lineChartView)
+        .addArrangedSubview(learnMoreButton)
+        .spacing(64)
+        .distribution(.fill)
+        .alignment(.center)
+        .build()
     
-    private lazy var headerSubHStack: UIStackView = {
-        let vStack = UIStackView(arrangedSubviews: [changeImageView, coinChangeLabel])
-        vStack.axis = .horizontal
-        vStack.spacing = 4
-        vStack.distribution = .fill
-        vStack.alignment = .center
-        return vStack
-    }()
+    private lazy var headerSubHStack = UIStackViewFactory(axis: .horizontal)
+        .addArrangedSubview(changeImageView)
+        .addArrangedSubview(coinChangeLabel)
+        .spacing(4)
+        .alignment(.center)
+        .build()
     
-    private lazy var headerVStack: UIStackView = {
-        let vStack = UIStackView(arrangedSubviews: [currentPriceLabel, priceLabel, headerSubHStack])
-        vStack.axis = .vertical
-        vStack.distribution = .fill
-        vStack.alignment = .leading
-        return vStack
-    }()
+    private lazy var headerVStack = UIStackViewFactory(axis: .vertical)
+        .addArrangedSubview(currentPriceLabel)
+        .addArrangedSubview(priceLabel)
+        .addArrangedSubview(headerSubHStack)
+        .alignment(.leading)
+        .build()
     
-    private lazy var headerHStack: UIStackView = {
-        let hStack = UIStackView(arrangedSubviews: [headerVStack, coinLogo])
-        hStack.axis = .horizontal
-        hStack.spacing = 16
-        hStack.distribution = .fill
-        hStack.alignment = .center
-        return hStack
-    }()
-    
-    // TODO: Add a learn more button
+    private lazy var headerHStack = UIStackViewFactory(axis: .horizontal)
+        .addArrangedSubview(headerVStack)
+        .addArrangedSubview(coinLogo)
+        .spacing(16)
+        .alignment(.center)
+        .build()
     
     class LineChartView: UIView {
         var dataPoints: [Double] = [] {
@@ -149,7 +103,7 @@ class DetailController: UIViewController {
             }
         }
         
-//            -Sparkline Graph-
+        //            -Sparkline Graph-
         override func draw(_ rect: CGRect) {
             super.draw(rect)
             
@@ -162,13 +116,13 @@ class DetailController: UIViewController {
             let numberOfLines = 5 // Change to accommodate 5 lines + upper and lower bounds
             let lineSpacing = rect.height / CGFloat(numberOfLines - 1) // Subtract 1 to account for upper bound
             let linePath = UIBezierPath()
-
+            
             for i in 0..<numberOfLines {
                 let y = lineSpacing * CGFloat(i)
                 linePath.move(to: CGPoint(x: 0, y: y))
                 linePath.addLine(to: CGPoint(x: rect.width, y: y))
             }
-
+            
             Theme.accentGrey.setStroke()
             linePath.lineWidth = 0.3
             linePath.stroke()
@@ -218,7 +172,9 @@ class DetailController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        
+        setupUIConfigurations()
+        setupUIConstraints()
         
         priceLabel.text = viewModel.coin.price
         coinChangeLabel.text = viewModel.coin.change
@@ -281,9 +237,7 @@ class DetailController: UIViewController {
     
     // MARK: - UI Setup
     
-    private func setupUI() {
-        
-        view.addSubview(scrollView)
+    private func setupUIConfigurations() {
         view.backgroundColor = Theme.backgroundColor
         
         navigationItem.title = "\(viewModel.coin.name ?? "N/A") (\(viewModel.coin.symbol ?? "N/A"))"
@@ -297,8 +251,27 @@ class DetailController: UIViewController {
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
-        scrollView.addSubview(contentView)
         scrollView.backgroundColor = Theme.backgroundColor
+    }
+    
+    private func setupUIConstraints() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let height = contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
+        height.priority = UILayoutPriority(1)
+        height.isActive = true
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
+            scrollView.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor),
+            scrollView.widthAnchor.constraint(equalTo: view.widthAnchor)
+        ])
         
         contentView.addSubview(changeImageView)
         contentView.addSubview(headerHStack)
@@ -306,26 +279,7 @@ class DetailController: UIViewController {
         
         learnMoreButton.addSubview(learnMoreLabel)
         
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        vStack.translatesAutoresizingMaskIntoConstraints = false
-        headerHStack.translatesAutoresizingMaskIntoConstraints = false
-        changeImageView.translatesAutoresizingMaskIntoConstraints = false
-        learnMoreLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        let height = contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
-        height.priority = UILayoutPriority(1)
-        height.isActive = true
-        
-        // TODO: Create a Draw function in DetailControllerView.swift
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
-            scrollView.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor),
-            scrollView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
@@ -360,7 +314,6 @@ class DetailController: UIViewController {
             learnMoreLabel.centerYAnchor.constraint(equalTo: learnMoreButton.centerYAnchor)
         ])
     }
-    
 }
 
 #Preview {

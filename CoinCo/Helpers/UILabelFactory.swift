@@ -21,11 +21,12 @@ final class UILabelFactory {
     }
       
     // MARK: - Public methods
-    func fontSize(of size: CGFloat) -> Self {
-      label.font = label.font.withSize(size)
-          
-      return self
+    func fontSize(of size: CGFloat, weight: UIFont.Weight) -> Self {
+        let font = UIFont.systemFont(ofSize: size, weight: weight)
+        label.font = font
+        return self
     }
+
       
     func textColor(with color: UIColor) -> Self {
       label.textColor = color

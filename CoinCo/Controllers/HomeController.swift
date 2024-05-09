@@ -35,42 +35,28 @@ class HomeController: UIViewController {
         return searchBar
     }()
     
+    private let mainHeaderView = UIViewFactory()
+        .build()
     
-    private let mainHeaderView: UIView = {
-        let view = UIView()
-        return view
-    }()
+    private let welcomeView = UIViewFactory()
+        .backgroundColor(Theme.headerColor)
+        .build()
     
-    private let welcomeView: UIView = {
-        let view = UIView()
-        view.backgroundColor = Theme.headerColor
-        return view
-    }()
+    private let sortView = UIViewFactory()
+        .backgroundColor(Theme.backgroundColor)
+        .cornerRadius(30)
+        .maskedCorners(.layerMaxXMinYCorner, .layerMinXMinYCorner)
+        .build()
     
-    private let sortView: UIView = {
-        let view = UIView()
-        view.backgroundColor = Theme.backgroundColor
-        view.layer.masksToBounds = false
-        view.layer.cornerRadius = 30
-        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
-        return view
-    }()
+    private let emptyView = UIViewFactory()
+        .backgroundColor(.clear)
+        .build()
     
-    private let emptyView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        return view
-    }()
-    
-    private let emptyImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "emptyViewWhite")
-        return imageView
-    }()
+    private let emptyImageView = UIImageViewFactory(image: UIImage(named: "emptyViewWhite"))
+        .build()
     
     private let welcomeLabel = UILabelFactory(text: "Welcome, Güray")
-        .fontSize(of: 24)
+        .fontSize(of: 24, weight: .regular)
         .numberOf(lines: 0)
         .textColor(with: Theme.accentWhite)
         .build()
@@ -91,42 +77,30 @@ class HomeController: UIViewController {
         return button
     }()
     
-    private let welcomeImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "headerImageNew")
-        return imageView
-    }()
+    private let welcomeImageView = UIImageViewFactory(image: UIImage(named: "headerImageNew"))
+        .build()
     
-    private lazy var welcomeVStack: UIStackView = {
-        let vStack = UIStackView(arrangedSubviews: [welcomeLabel, learnMoreButton])
-        vStack.spacing = 8
-        vStack.axis = .vertical
-        vStack.distribution = .fill
-        vStack.alignment = .leading
-        return vStack
-    }()
+    private lazy var welcomeVStack = UIStackViewFactory(axis: .vertical)
+        .addArrangedSubview(welcomeLabel)
+        .addArrangedSubview(learnMoreButton)
+        .alignment(.leading)
+        .build()
     
-    private lazy var welcomeHStack: UIStackView = {
-        let vStack = UIStackView(arrangedSubviews: [welcomeVStack, welcomeImageView])
-        vStack.spacing = 8
-        vStack.axis = .horizontal
-        vStack.distribution = .fill
-        vStack.alignment = .leading
-        return vStack
-    }()
+    private lazy var welcomeHStack = UIStackViewFactory(axis: .horizontal)
+        .addArrangedSubview(welcomeVStack)
+        .addArrangedSubview(welcomeImageView)
+        .alignment(.leading)
+        .build()
     
-    private lazy var sortHStack: UIStackView = {
-        let hStack = UIStackView(arrangedSubviews: [rankingListLabel, sortButton])
-        hStack.axis = .horizontal
-        hStack.distribution = .equalSpacing
-        hStack.spacing = 16
-        hStack.alignment = .center
-        return hStack
-    }()
+    private lazy var sortHStack = UIStackViewFactory(axis: .horizontal)
+        .addArrangedSubview(rankingListLabel)
+        .addArrangedSubview(sortButton)
+        .distribution(.equalSpacing)
+        .alignment(.center)
+        .build()
     
     private let rankingListLabel = UILabelFactory(text: "Ranking List")
-        .fontSize(of: 24)
+        .fontSize(of: 24, weight: .semibold)
         .textColor(with: Theme.accentWhite)
         .build()
     
@@ -185,21 +159,17 @@ class HomeController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setupUI()
         
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
+        setupUIConfigurations()
+        setupUIConstraints()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
         searchBar.delegate = self
         
-        searchBar.showsCancelButton = false
-        
         tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        // Add tap gesture recognizer to view
         view.addGestureRecognizer(tapGesture)
-        // Initially disable tap gesture recognizer
         tapGesture.isEnabled = false
-        
-        // Set the delegate of the search bar
         
         self.viewModel.onCoinsUpdated = { [weak self] in
             guard let self = self else { return }
@@ -212,7 +182,7 @@ class HomeController: UIViewController {
     
     // MARK: - UI Setup
     
-    private func setupUI() {
+    private func setupUIConfigurations() {
         navigationItem.title = "CoinCo"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.hideHairline()
@@ -225,33 +195,32 @@ class HomeController: UIViewController {
         navigationItem.standardAppearance = appearance
         navigationItem.scrollEdgeAppearance = appearance
         
-        emptyView.isHidden = true
-        emptyView.addSubview(emptyImageView)
+        searchBar.showsCancelButton = false
         
-        welcomeView.addSubview(welcomeHStack)
-        sortView.addSubview(sortHStack)
+        tableView.separatorStyle = .none
+        
+        emptyView.isHidden = true
+    }
+    
+    private func setupUIConstraints() {
+        view.addSubview(tableView)
+        
+        emptyView.addSubview(emptyImageView)
+        tableView.tableHeaderView = mainHeaderView
+        tableView.backgroundView = emptyView
+        
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        
         mainHeaderView.addSubview(welcomeView)
         mainHeaderView.addSubview(sortView)
         mainHeaderView.addSubview(searchBar)
-        
-        tableView.backgroundView = emptyView
-        tableView.tableHeaderView = mainHeaderView
-        tableView.separatorStyle = .none
-        
-        view.addSubview(tableView)
-        
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        mainHeaderView.translatesAutoresizingMaskIntoConstraints = false
-        sortButton.translatesAutoresizingMaskIntoConstraints = false
-        rankingListLabel.translatesAutoresizingMaskIntoConstraints = false
-        sortHStack.translatesAutoresizingMaskIntoConstraints = false
-        welcomeVStack.translatesAutoresizingMaskIntoConstraints = false
-        welcomeHStack.translatesAutoresizingMaskIntoConstraints = false
-        welcomeView.translatesAutoresizingMaskIntoConstraints = false
-        sortView.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        emptyView.translatesAutoresizingMaskIntoConstraints = false
-        emptyImageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             mainHeaderView.topAnchor.constraint(equalTo: tableView.topAnchor),
@@ -259,6 +228,20 @@ class HomeController: UIViewController {
             mainHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             mainHeaderView.heightAnchor.constraint(equalToConstant: 260),
             
+            emptyView.topAnchor.constraint(equalTo: mainHeaderView.bottomAnchor),
+            emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            emptyImageView.centerXAnchor.constraint(equalTo: emptyView.centerXAnchor),
+            emptyImageView.centerYAnchor.constraint(equalTo: emptyView.centerYAnchor),
+            emptyImageView.leadingAnchor.constraint(equalTo: emptyView.leadingAnchor, constant: 8),
+            emptyImageView.trailingAnchor.constraint(equalTo: emptyView.trailingAnchor, constant: 8)
+        ])
+        
+        welcomeView.addSubview(welcomeHStack)
+        
+        NSLayoutConstraint.activate([
             welcomeView.topAnchor.constraint(equalTo: mainHeaderView.topAnchor),
             welcomeView.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor),
             welcomeView.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor),
@@ -266,13 +249,21 @@ class HomeController: UIViewController {
             
             welcomeLabel.leadingAnchor.constraint(equalTo: welcomeView.leadingAnchor, constant: 16),
             welcomeLabel.topAnchor.constraint(equalTo: welcomeView.topAnchor, constant: 16),
+            
             learnMoreButton.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: 16),
             learnMoreButton.heightAnchor.constraint(equalToConstant: 40),
             learnMoreButton.bottomAnchor.constraint(greaterThanOrEqualTo: welcomeView.bottomAnchor, constant: -76),
             
             welcomeImageView.bottomAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: 4),
-            welcomeImageView.trailingAnchor.constraint(equalTo: welcomeView.trailingAnchor, constant: 48),
-            
+            welcomeImageView.trailingAnchor.constraint(equalTo: welcomeView.trailingAnchor, constant: 48)
+        ])
+        
+        sortView.addSubview(sortHStack)
+        
+        sortButton.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
             sortView.topAnchor.constraint(equalTo: welcomeView.bottomAnchor, constant: -32),
             sortView.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor),
             sortView.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor),
@@ -285,26 +276,11 @@ class HomeController: UIViewController {
             rankingListLabel.leadingAnchor.constraint(equalTo: sortView.leadingAnchor, constant: 16),
             sortButton.trailingAnchor.constraint(equalTo: sortView.trailingAnchor, constant: -16),
             
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
             searchBar.topAnchor.constraint(equalTo: rankingListLabel.bottomAnchor, constant: 16),
             searchBar.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor, constant: 8),
             searchBar.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor, constant: -8),
-            searchBar.bottomAnchor.constraint(equalTo: sortView.bottomAnchor),
+            searchBar.bottomAnchor.constraint(equalTo: sortView.bottomAnchor)
             
-            emptyView.topAnchor.constraint(equalTo: mainHeaderView.bottomAnchor),
-            emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            // Constraints for emptyImageView
-            emptyImageView.centerXAnchor.constraint(equalTo: emptyView.centerXAnchor),
-            emptyImageView.centerYAnchor.constraint(equalTo: emptyView.centerYAnchor),
-            emptyImageView.leadingAnchor.constraint(equalTo: emptyView.leadingAnchor, constant: 8),
-            emptyImageView.trailingAnchor.constraint(equalTo: emptyView.trailingAnchor, constant: 8),
         ])
     }
 }
