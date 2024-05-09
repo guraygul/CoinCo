@@ -18,25 +18,39 @@ class CoinCell: UITableViewCell {
     
     // MARK: - UI Components
     
-    private let logoContainer: UIView = {
-        let lc = UIView()
-        lc.clipsToBounds = true
-        return lc
-    }()
+    private lazy var coinLabelVStack = UIStackViewFactory(axis: .vertical)
+        .addArrangedSubview(coinLabel)
+        .addArrangedSubview(coinShortName)
+        .alignment(.leading)
+        .build()
     
-    private let coinLogo: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        iv.image = UIImage(systemName: "questionmark")
-        iv.tintColor = .black
-        return iv
-    }()
-      
+    private lazy var coinPriceVStack = UIStackViewFactory(axis: .vertical)
+        .addArrangedSubview(coinPriceLabel)
+        .addArrangedSubview(coinChangeHStack)
+        .alignment(.trailing)
+        .build()
+    
+    private lazy var coinChangeHStack = UIStackViewFactory(axis: .horizontal)
+        .addArrangedSubview(changeImageView)
+        .addArrangedSubview(coinChangeLabel)
+        .alignment(.leading)
+        .build()
+    
+    private let logoContainer = UIViewFactory()
+        .clipsToBounds(true)
+        .cornerRadius(10)
+        .build()
+    
+    let coinLogo = UIImageViewFactory(image: UIImage(systemName: "questionmark"))
+        .contentMode(.scaleAspectFit)
+        .tintColor(.black)
+        .build()
+    
     private let coinLabel = UILabelFactory(text: "Error")
         .fontSize(of: 22)
         .textColor(with: Theme.accentWhite)
         .build()
-        
+    
     private let coinShortName = UILabelFactory(text: "Error")
         .fontSize(of: 16)
         .textColor(with: Theme.accentGrey)
@@ -52,11 +66,9 @@ class CoinCell: UITableViewCell {
         .textColor(with: Theme.accentGrey)
         .build()
     
-    private let changeImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
+    let changeImageView = UIImageViewFactory()
+        .contentMode(.scaleAspectFit)
+        .build()
     
     // MARK: - Lifecycle
     
@@ -76,7 +88,7 @@ class CoinCell: UITableViewCell {
             let hexColor = UIColor(rgb: hexValue)
             logoContainer.backgroundColor = hexColor.withAlphaComponent(0.2)
             
-        } else { // If no color was provided for coin
+        } else { // If no color was provided for the coin
             logoContainer.backgroundColor = .lightGray.withAlphaComponent(0.2)
         }
     }
@@ -114,7 +126,7 @@ class CoinCell: UITableViewCell {
             self.coinPriceLabel.text = "$N/A"
             return
         }
-
+        
         if let formattedPrice = formatter.string(from: NSNumber(value: price)) {
             self.coinPriceLabel.text = formattedPrice
         } else {
@@ -151,47 +163,33 @@ class CoinCell: UITableViewCell {
     // MARK: - UI Setup
     
     private func setupUI() {
-        self.addSubview(coinLabel)
-        self.addSubview(coinShortName)
-        self.addSubview(coinPriceLabel)
-        self.addSubview(coinChangeLabel)
-        self.addSubview(changeImageView)
-        self.addSubview(logoContainer)
-        
-        self.logoContainer.addSubview(coinLogo)
-        
-        coinLogo.translatesAutoresizingMaskIntoConstraints = false
-        changeImageView.translatesAutoresizingMaskIntoConstraints = false
-        logoContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(logoContainer)
+        logoContainer.addSubview(coinLogo)
         
         NSLayoutConstraint.activate([
             logoContainer.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             logoContainer.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor),
-            logoContainer.widthAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.8),
-            logoContainer.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.8),
+            logoContainer.widthAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.7),
+            logoContainer.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.7),
             
             coinLogo.centerXAnchor.constraint(equalTo: logoContainer.centerXAnchor),
             coinLogo.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
             coinLogo.widthAnchor.constraint(equalTo: logoContainer.widthAnchor, multiplier: 0.5),
-            coinLogo.heightAnchor.constraint(equalTo: logoContainer.heightAnchor, multiplier: 0.5),
-            
-            coinLabel.leadingAnchor.constraint(equalTo: logoContainer.trailingAnchor, constant: 8),
-            coinLabel.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor, constant: 4),
-            coinLabel.trailingAnchor.constraint(equalTo: self.centerXAnchor, constant: 92),
-            
-            coinShortName.leadingAnchor.constraint(equalTo: logoContainer.trailingAnchor, constant: 8),
-            coinShortName.topAnchor.constraint(equalTo: self.coinLabel.bottomAnchor, constant: 4),
-            
-            coinPriceLabel.trailingAnchor.constraint(equalTo: self.layoutMarginsGuide.trailingAnchor),
-            coinPriceLabel.centerYAnchor.constraint(equalTo: coinLabel.centerYAnchor),
-            
-            coinChangeLabel.trailingAnchor.constraint(equalTo: self.layoutMarginsGuide.trailingAnchor),
-            coinChangeLabel.centerYAnchor.constraint(equalTo: coinShortName.centerYAnchor),
-            
-            changeImageView.centerYAnchor.constraint(equalTo: coinChangeLabel.centerYAnchor),
-            changeImageView.trailingAnchor.constraint(equalTo: coinChangeLabel.leadingAnchor, constant: -4),
-            changeImageView.widthAnchor.constraint(equalToConstant: 20),
-            changeImageView.heightAnchor.constraint(equalToConstant: 20)
+            coinLogo.heightAnchor.constraint(equalTo: logoContainer.heightAnchor, multiplier: 0.5)
+        ])
+        
+        addSubview(coinLabelVStack)
+        
+        NSLayoutConstraint.activate([
+            coinLabelVStack.leadingAnchor.constraint(equalTo: logoContainer.trailingAnchor, constant: 8),
+            coinLabelVStack.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+        
+        addSubview(coinPriceVStack)
+        
+        NSLayoutConstraint.activate([
+            coinPriceVStack.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            coinPriceVStack.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
 }
