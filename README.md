@@ -1,5 +1,5 @@
 # CoinCo
-### An application for crypto lovers. You can browse through coins, share them and access their details easily.
+#### An application for crypto lovers. You can browse through coins, share them and access their details easily.
 
 ## Table Of Contents
 - [Features](#features)
@@ -54,8 +54,8 @@ Before you begin, ensure you have the following:
 - Xcode installed
 
 Also, make sure that these dependencies are added in your project's target:
-- Alamofire: Alamofire is an elegant HTTP networking library for Swift that simplifies network requests and handling responses.
-- SDWebImage: SDWebImage is a widely-used library for asynchronously downloading and caching images in iOS and macOS applications, providing a seamless and efficient way to manage image loading.
+- [Alamofire](https://github.com/Alamofire/Alamofire): Alamofire is an elegant HTTP networking library for Swift that simplifies network requests and handling responses.
+- [SDWebImage](https://github.com/SDWebImage/SDWebImage): SDWebImage is a widely-used library for asynchronously downloading and caching images in iOS and macOS applications, providing a seamless and efficient way to manage image loading.
 
 ### Installation
 1. Clone the repository:
@@ -63,7 +63,7 @@ Also, make sure that these dependencies are added in your project's target:
 https://github.com/guraygul/CoinCo.git
 ```
 2. Open the project in Xcode::
-```
+```bash
 cd CoinCo
 open CoinCo.xcodeproj
 ```
