@@ -59,7 +59,7 @@ Also, make sure that these dependencies are added in your project's target:
 
 ### Installation
 1. Clone the repository:
-```bash
+```
 git clone https://github.com/guraygul/CoinCo.git
 ```
 2. Open the project in Xcode::
