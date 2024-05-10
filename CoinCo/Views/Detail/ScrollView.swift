@@ -4,6 +4,7 @@
 //
 //  Created by Güray Gül on 9.05.2024.
 //
+
 import UIKit
 
 protocol ScrollViewDelegate: AnyObject {
@@ -180,18 +181,17 @@ final class ScrollView: UIScrollView {
             }
         }
         
-        //            -Sparkline Graph-
-        override func draw(_ rect: CGRect) {
+        override func draw(_ rect: CGRect) { // Sparkline Graph
             super.draw(rect)
             
             guard !dataPoints.isEmpty else { return }
             
             let maxValue = (dataPoints.max() ?? 0.0) * 1.01
-            let minValue = (dataPoints.min() ?? 0.0) / 1.01 // Get the minimum value
+            let minValue = (dataPoints.min() ?? 0.0) / 1.01
             let range = maxValue - minValue
             
-            let numberOfLines = 5 // Change to accommodate 5 lines + upper and lower bounds
-            let lineSpacing = rect.height / CGFloat(numberOfLines - 1) // Subtract 1 to account for upper bound
+            let numberOfLines = 5
+            let lineSpacing = rect.height / CGFloat(numberOfLines - 1)
             let linePath = UIBezierPath()
             
             for i in 0..<numberOfLines {
@@ -218,7 +218,6 @@ final class ScrollView: UIScrollView {
                     path.addLine(to: CGPoint(x: x, y: y))
                 }
             }
-            
             path.stroke()
         }
     }
@@ -243,8 +242,6 @@ final class ScrollView: UIScrollView {
             let values = sparkline.compactMap { Double($0) }
             lineChartView.dataPoints = values
         }
-        
-        // TODO: Create a Helper for image
         
         guard var urlString = viewModel.coin.iconURL else { return }
         
@@ -279,7 +276,6 @@ final class ScrollView: UIScrollView {
         let formattedMarketCap = formatNumber(marketCapPrice)
         marketCapPriceLabel.text = formattedMarketCap
         
-        // Repeat the same process for volume
         guard let volumeString = viewModel.coin.the24HVolume, let volumePrice = Double(volumeString) else {
             volumeNumberLabel.text = "$N/A"
             return
@@ -415,6 +411,7 @@ final class ScrollView: UIScrollView {
             learnMoreLabel.centerYAnchor.constraint(equalTo: learnMoreButton.centerYAnchor)
         ])
     }
+    
 }
 
 #Preview {

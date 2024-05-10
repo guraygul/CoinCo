@@ -82,4 +82,5 @@ final class SortView: UIView {
             sortButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
         ])
     }
+    
 }

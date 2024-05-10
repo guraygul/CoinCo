@@ -11,6 +11,7 @@ import SDWebImage
 class DetailControllerViewModel {
     
     // MARK: - Variables
+    
     let coin: Coin
     
     init(coin: Coin) {
@@ -18,6 +19,7 @@ class DetailControllerViewModel {
     }
     
     // MARK: - Computed Properties
+    
     var rankLabel: String {
         return "Rank: \(String(describing: self.coin.rank))"
     }
@@ -37,4 +39,5 @@ class DetailControllerViewModel {
     var coinChangeLabel: String {
         return "Change: \(String(describing: self.coin.change))"
     }
+    
 }

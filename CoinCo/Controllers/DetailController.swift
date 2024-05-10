@@ -13,7 +13,6 @@ class DetailController: UIViewController, ScrollViewDelegate {
     // MARK: - Variables
     
     private let viewModel: DetailControllerViewModel
-    
     private lazy var scrollView = ScrollView(viewModel: viewModel)
     
     // MARK: - UI Components
@@ -90,11 +89,9 @@ class DetailController: UIViewController, ScrollViewDelegate {
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
-            //            scrollView.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor),
-            //            scrollView.widthAnchor.constraint(equalTo: view.widthAnchor)
         ])
-        
     }
+    
 }
 
 #Preview {

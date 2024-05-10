@@ -9,12 +9,11 @@ import UIKit
 import SDWebImage
 
 class CoinCell: UITableViewCell {
-    
-    static let identifier = "CoinCell"
-    
+        
     // MARK: - Variables
     
     private var coin: Coin!
+    static let identifier = "CoinCell"
     
     // MARK: - UI Components
     
@@ -86,7 +85,7 @@ class CoinCell: UITableViewCell {
             let hexColor = UIColor(rgb: hexValue)
             logoContainer.backgroundColor = hexColor.withAlphaComponent(0.2)
             
-        } else { // If no color was provided for the coin
+        } else {
             logoContainer.backgroundColor = .lightGray.withAlphaComponent(0.2)
         }
     }
@@ -191,6 +190,7 @@ class CoinCell: UITableViewCell {
             coinPriceVStack.leadingAnchor.constraint(equalTo: coinLabelVStack.trailingAnchor, constant: 16)
         ])
     }
+    
 }
 
 #Preview {

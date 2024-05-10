@@ -56,7 +56,7 @@ final class WelcomeView: UIView {
         .alignment(.leading)
         .build()
     
-    lazy var welcomeHStack = UIStackViewFactory(axis: .horizontal)
+    private lazy var welcomeHStack = UIStackViewFactory(axis: .horizontal)
         .addArrangedSubview(welcomeVStack)
         .addArrangedSubview(welcomeImageView)
         .alignment(.leading)

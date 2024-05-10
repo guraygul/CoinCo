@@ -9,5 +9,4 @@ import Foundation
 
 struct Constants {
     static let fullURL = "https://psp-merchantpanel-service-sandbox.ozanodeme.com.tr/api/v1/dummy/coins"
-    static let baseCoinRankingURL = "https://coinranking.com/coin/"
 }

@@ -127,6 +127,26 @@
 			path = Detail;
 			sourceTree = "<group>";
 		};
+		10E8B04A2BEE45FA009240EE /* Factory Pattern */ = {
+			isa = PBXGroup;
+			children = (
+				10EFB2A92BE80C5100938603 /* UILabelFactory.swift */,
+				1002D3BB2BEC386F00F56FDA /* UIStackViewFactory.swift */,
+				1002D3BD2BECF93400F56FDA /* UIViewFactory.swift */,
+				1002D3BF2BECF9C100F56FDA /* UIImageViewFactory.swift */,
+			);
+			path = "Factory Pattern";
+			sourceTree = "<group>";
+		};
+		10E8B04B2BEE460F009240EE /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				10EFB2A42BE7FDDC00938603 /* UIColorHexSupport.swift */,
+				10EFB2AD2BE823B100938603 /* NavBarBorderRemoveSupport.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		10EFB2792BE6576100938603 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
@@ -194,12 +214,8 @@
 		10EFB2A32BE7FD5B00938603 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				10EFB2A42BE7FDDC00938603 /* UIColorHexSupport.swift */,
-				10EFB2AD2BE823B100938603 /* NavBarBorderRemoveSupport.swift */,
-				10EFB2A92BE80C5100938603 /* UILabelFactory.swift */,
-				1002D3BB2BEC386F00F56FDA /* UIStackViewFactory.swift */,
-				1002D3BD2BECF93400F56FDA /* UIViewFactory.swift */,
-				1002D3BF2BECF9C100F56FDA /* UIImageViewFactory.swift */,
+				10E8B04B2BEE460F009240EE /* Extensions */,
+				10E8B04A2BEE45FA009240EE /* Factory Pattern */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";

@@ -9,6 +9,8 @@ import UIKit
 
 class HomeControllerViewModel {
     
+    // MARK: - Variables
+    
     var onCoinsUpdated: (() -> Void)?
     var onFilteredCoinsUpdated: (() -> Void)?
     
@@ -42,13 +44,15 @@ class HomeControllerViewModel {
         }
     }
     
+    // MARK: - Filter Logic
+    
     func filterCoins(with searchText: String = "") {
         if searchText.isEmpty {
             filteredCoins = allCoins
         } else {
             filteredCoins = allCoins.filter { coin in
                 return coin.name?.lowercased().contains(searchText.lowercased()) ?? false ||
-                    coin.symbol?.lowercased().contains(searchText.lowercased()) ?? false
+                coin.symbol?.lowercased().contains(searchText.lowercased()) ?? false
             }
         }
     }
@@ -62,12 +66,12 @@ class HomeControllerViewModel {
     }
     
     func resetFilteredCoins() {
-            filteredCoins = allCoins
-        }
-        
-        func numberOfFilteredCoins() -> Int {
-            return filteredCoins.count
-        }
+        filteredCoins = allCoins
+    }
+    
+    func numberOfFilteredCoins() -> Int {
+        return filteredCoins.count
+    }
     
     func coin(at index: Int) -> Coin? {
         guard index >= 0 && index < filteredCoins.count else {
@@ -77,46 +81,46 @@ class HomeControllerViewModel {
     }
     
     func sortCoinsBy(option: String) {
-            switch option {
-            case "Price":
-                filteredCoins.sort { coin1, coin2 in
-                    if let price1 = coin1.price, let price2 = coin2.price {
-                        return scientificToDouble(price1) > scientificToDouble(price2)
-                    }
-                    return false
+        switch option {
+        case "Price":
+            filteredCoins.sort { coin1, coin2 in
+                if let price1 = coin1.price, let price2 = coin2.price {
+                    return scientificToDouble(price1) > scientificToDouble(price2)
                 }
-            case "Market Cap":
-                filteredCoins.sort { coin1, coin2 in
-                    if let marketCap1 = coin1.marketCap, let marketCap2 = coin2.marketCap {
-                        return scientificToDouble(marketCap1) > scientificToDouble(marketCap2)
-                    }
-                    return false
-                }
-            case "24h Volume":
-                filteredCoins.sort { coin1, coin2 in
-                    if let volume1 = coin1.the24HVolume, let volume2 = coin2.the24HVolume {
-                        return scientificToDouble(volume1) > scientificToDouble(volume2)
-                    }
-                    return false
-                }
-            case "Change":
-                filteredCoins.sort { coin1, coin2 in
-                    if let change1 = coin1.change, let change2 = coin2.change {
-                        return scientificToDouble(change1) > scientificToDouble(change2)
-                    }
-                    return false
-                }
-            case "Listed At":
-                filteredCoins.sort { coin1, coin2 in
-                    if let listedAt1 = coin1.listedAt, let listedAt2 = coin2.listedAt {
-                        return listedAt1 > listedAt2
-                    }
-                    return false
-                }
-            default:
-                break
+                return false
             }
+        case "Market Cap":
+            filteredCoins.sort { coin1, coin2 in
+                if let marketCap1 = coin1.marketCap, let marketCap2 = coin2.marketCap {
+                    return scientificToDouble(marketCap1) > scientificToDouble(marketCap2)
+                }
+                return false
+            }
+        case "24h Volume":
+            filteredCoins.sort { coin1, coin2 in
+                if let volume1 = coin1.the24HVolume, let volume2 = coin2.the24HVolume {
+                    return scientificToDouble(volume1) > scientificToDouble(volume2)
+                }
+                return false
+            }
+        case "Change":
+            filteredCoins.sort { coin1, coin2 in
+                if let change1 = coin1.change, let change2 = coin2.change {
+                    return scientificToDouble(change1) > scientificToDouble(change2)
+                }
+                return false
+            }
+        case "Listed At":
+            filteredCoins.sort { coin1, coin2 in
+                if let listedAt1 = coin1.listedAt, let listedAt2 = coin2.listedAt {
+                    return listedAt1 > listedAt2
+                }
+                return false
+            }
+        default:
+            break
         }
+    }
     
     private func scientificToDouble(_ scientificNumber: String) -> Double {
         if let doubleValue = Double(scientificNumber) {

@@ -20,6 +20,7 @@ class HomeController: UIViewController, WelcomeViewDelegate, SortViewDelegate {
     private lazy var sortView = SortView()
     
     // MARK: - UI Components
+    
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         
@@ -210,8 +211,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    // Show the dropdown menu when the sort button is tapped
-    internal func showSortOptions() {
+    internal func showSortOptions() { // Show the dropdown menu when the sort button is tapped
         let alertController = UIAlertController(title: "Sort By", message: nil, preferredStyle: .actionSheet)
         for option in sortOptions {
             let action = UIAlertAction(title: option, style: .default) { [weak self] action in
@@ -224,7 +224,6 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
         present(alertController, animated: true)
     }
     
-    // TODO: Add arrows for ascending sort and descend sort
     internal func sortTableViewBy(option: String) {
         viewModel.sortCoinsBy(option: option)
         tableView.reloadData()
@@ -274,7 +273,6 @@ extension HomeController: UISearchBarDelegate {
     @objc private func dismissKeyboard() {
         searchBar.resignFirstResponder()
     }
-    
 }
 
 extension HomeController: UISearchResultsUpdating {

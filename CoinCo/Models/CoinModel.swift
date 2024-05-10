@@ -31,7 +31,7 @@ struct Coin: Decodable {
     let lowVolume: Bool?
     let coinrankingURL: String?
     let the24HVolume, btcPrice: String?
-
+    
     enum CodingKeys: String, CodingKey {
         case uuid, symbol, name, color
         case iconURL = "iconUrl"
@@ -46,7 +46,7 @@ struct Coin: Decodable {
 struct Stats: Decodable {
     let total, totalCoins, totalMarkets, totalExchanges: Int?
     let totalMarketCap, total24HVolume: String?
-
+    
     enum CodingKeys: String, CodingKey {
         case total, totalCoins, totalMarkets, totalExchanges, totalMarketCap
         case total24HVolume = "total24hVolume"
