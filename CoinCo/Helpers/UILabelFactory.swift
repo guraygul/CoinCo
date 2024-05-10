@@ -27,7 +27,6 @@ final class UILabelFactory {
         return self
     }
 
-      
     func textColor(with color: UIColor) -> Self {
       label.textColor = color
           
@@ -38,6 +37,11 @@ final class UILabelFactory {
       label.numberOfLines = lines
           
       return self
+    }
+    
+    func textAlignment(_ alignment: NSTextAlignment) -> Self {
+        label.textAlignment = alignment
+        return self
     }
       
     func build() -> UILabel {
