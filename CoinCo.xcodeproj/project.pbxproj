@@ -109,6 +109,15 @@
 			path = CoinCo;
 			sourceTree = "<group>";
 		};
+		1078E0402BEE669C00E26E1F /* API */ = {
+			isa = PBXGroup;
+			children = (
+				10EFB2952BE6BA2100938603 /* NetworkManager.swift */,
+				10EFB29C2BE6C00800938603 /* CoinService.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
 		10E8B0482BED62F7009240EE /* Home */ = {
 			isa = PBXGroup;
 			children = (
@@ -205,8 +214,7 @@
 			isa = PBXGroup;
 			children = (
 				10EFB27E2BE6590F00938603 /* Constants */,
-				10EFB2952BE6BA2100938603 /* NetworkManager.swift */,
-				10EFB29C2BE6C00800938603 /* CoinService.swift */,
+				1078E0402BEE669C00E26E1F /* API */,
 			);
 			path = Network;
 			sourceTree = "<group>";
