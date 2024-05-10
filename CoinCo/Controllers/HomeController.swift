@@ -14,7 +14,6 @@ class HomeController: UIViewController, WelcomeViewDelegate, SortViewDelegate {
     
     private let viewModel: HomeControllerViewModel
     private let sortOptions: [String] = ["Price", "Market Cap", "24h Volume", "Change", "Listed At"]
-    private var filteredCoins: [Coin] = []
     private var tapGesture: UITapGestureRecognizer!
     
     private lazy var welcomeView = WelcomeView()
@@ -85,7 +84,6 @@ class HomeController: UIViewController, WelcomeViewDelegate, SortViewDelegate {
         self.viewModel.onCoinsUpdated = { [weak self] in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                self.filteredCoins = self.viewModel.coins
                 self.tableView.reloadData()
             }
         }
@@ -175,7 +173,6 @@ class HomeController: UIViewController, WelcomeViewDelegate, SortViewDelegate {
             searchBar.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor, constant: -8),
             searchBar.bottomAnchor.constraint(equalTo: mainHeaderView.bottomAnchor)
         ])
-        
     }
 }
 
@@ -184,7 +181,7 @@ class HomeController: UIViewController, WelcomeViewDelegate, SortViewDelegate {
 extension HomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredCoins.count
+        return viewModel.coinsCount()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -192,8 +189,9 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
             fatalError("Unable to dequeue CoinCell in HomeController")
         }
         
-        let coin = filteredCoins[indexPath.row]
-        cell.configure(with: coin)
+        if let coin = viewModel.coin(at: indexPath.row) {
+            cell.configure(with: coin)
+        }
         
         return cell
     }
@@ -205,11 +203,11 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.tableView.deselectRow(at: indexPath, animated: true)
         
-        let coin = self.viewModel.coins[indexPath.row]
-        let vm = DetailControllerViewModel(coin: coin)
-        let vc = DetailController(viewModel: vm)
-        
-        self.navigationController?.pushViewController(vc, animated: true)
+        if let coin = viewModel.coin(at: indexPath.row) {
+            let vm = DetailControllerViewModel(coin: coin)
+            let vc = DetailController(viewModel: vm)
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     // Show the dropdown menu when the sort button is tapped
@@ -227,54 +225,9 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
     }
     
     // TODO: Add arrows for ascending sort and descend sort
-    private func sortTableViewBy(option: String) {
-        switch option {
-        case "Price":
-            viewModel.coins.sort { coin1, coin2 in
-                if let price1 = coin1.price, let price2 = coin2.price {
-                    return scientificToDouble(price1) > scientificToDouble(price2)
-                }
-                return false
-            }
-        case "Market Cap":
-            viewModel.coins.sort { coin1, coin2 in
-                if let marketCap1 = coin1.marketCap, let marketCap2 = coin2.marketCap {
-                    return scientificToDouble(marketCap1) > scientificToDouble(marketCap2)
-                }
-                return false
-            }
-        case "24h Volume":
-            viewModel.coins.sort { coin1, coin2 in
-                if let volume1 = coin1.the24HVolume, let volume2 = coin2.the24HVolume {
-                    return scientificToDouble(volume1) > scientificToDouble(volume2)
-                }
-                return false
-            }
-        case "Change":
-            viewModel.coins.sort { coin1, coin2 in
-                if let change1 = coin1.change, let change2 = coin2.change {
-                    return scientificToDouble(change1) > scientificToDouble(change2)
-                }
-                return false
-            }
-        case "Listed At":
-            viewModel.coins.sort { coin1, coin2 in
-                if let listedAt1 = coin1.listedAt, let listedAt2 = coin2.listedAt {
-                    return listedAt1 > listedAt2
-                }
-                return false
-            }
-        default:
-            break
-        }
+    internal func sortTableViewBy(option: String) {
+        viewModel.sortCoinsBy(option: option)
         tableView.reloadData()
-    }
-    
-    private func scientificToDouble(_ scientificNumber: String) -> Double {
-        if let doubleValue = Double(scientificNumber) {
-            return doubleValue
-        }
-        return 0.0
     }
     
     internal func openSafari() {
@@ -296,35 +249,22 @@ extension HomeController: UISearchBarDelegate {
         tapGesture.isEnabled = false
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filterCoins(with: searchText)
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    internal func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = nil
         
         searchBar.setShowsCancelButton(false, animated: true)
         searchBar.endEditing(true)
         searchBar.resignFirstResponder()
         
-        filteredCoins = viewModel.coins
+        viewModel.resetFilteredCoins()
         tableView.reloadData()
-        emptyView.isHidden = !filteredCoins.isEmpty
+        emptyView.isHidden = viewModel.numberOfFilteredCoins() > 0
     }
     
-    
-    private func filterCoins(with searchText: String) {
-        if searchText.isEmpty {
-            filteredCoins = viewModel.coins
-        } else {
-            filteredCoins = viewModel.coins.filter { coin in
-                return coin.name?.lowercased().contains(searchText.lowercased()) ?? false ||
-                coin.symbol?.lowercased().contains(searchText.lowercased()) ?? false
-            }
-        }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        viewModel.filterCoins(with: searchText)
         tableView.reloadData()
-        emptyView.isHidden = !filteredCoins.isEmpty
-        
+        emptyView.isHidden = viewModel.numberOfFilteredCoins() > 0
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -340,9 +280,10 @@ extension HomeController: UISearchBarDelegate {
 extension HomeController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text else { return }
-        filterCoins(with: searchText)
+        viewModel.filterCoins(with: searchText)
+        tableView.reloadData()
+        emptyView.isHidden = viewModel.numberOfFilteredCoins() > 0
     }
-    
 }
 
 #Preview {
