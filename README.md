@@ -3,12 +3,12 @@
 
 ## Table Of Contents
 - [Features](#features)
- - [In app Gifs](#in-app-gifs)
- - [Tech Stack](#tech-stack)
- - [Architecture](#architecture)
+  - [In app Gifs](#in-app-gifs)
+  - [Tech Stack](#tech-stack)
+  - [Architecture](#architecture)
 - [Getting Started](#getting-started)
- - [Requirements](#requirements)
- - [Installation](#installation)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
 - [Known Issues](#known-issues)
 - [Nice to have](#nice-to-have)
 
@@ -33,7 +33,10 @@
 - Dependency Manager: SPM
 
 ## Architecture
-<img width="900" alt="MVVM" src="https://github.com/guraygul/CoinCo/assets/58820744/a0ee1bbd-287c-4aac-a604-d08a97aae266">
+| MVVM Architecture |
+| -------- |
+| <img width="900" alt="MVVM" src="https://github.com/guraygul/CoinCo/assets/58820744/a0ee1bbd-287c-4aac-a604-d08a97aae266"> |
+
 In developing CoinCo App, the programmatically approuch and MVVM (Modal-View-ViewModel) architecture are being used for these key reasons:
 
 - Separation of Concerns: MVVM cleanly separates the UI (View) from business logic and data (ViewModel), promoting code clarity and ease of maintenance.
@@ -49,9 +52,10 @@ In developing CoinCo App, the programmatically approuch and MVVM (Modal-View-Vie
 ### Requirements
 Before you begin, ensure you have the following:
 - Xcode installed
+
 Also, make sure that these dependencies are added in your project's target:
-Alamofire: Alamofire is an elegant HTTP networking library for Swift that simplifies network requests and handling responses.
-SDWebImage: SDWebImage is a widely-used library for asynchronously downloading and caching images in iOS and macOS applications, providing a seamless and efficient way to manage image loading.
+- Alamofire: Alamofire is an elegant HTTP networking library for Swift that simplifies network requests and handling responses.
+- SDWebImage: SDWebImage is a widely-used library for asynchronously downloading and caching images in iOS and macOS applications, providing a seamless and efficient way to manage image loading.
 
 ### Installation
 1. Clone the repository:
