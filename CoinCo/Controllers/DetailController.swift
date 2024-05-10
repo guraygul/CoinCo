@@ -17,11 +17,11 @@ class DetailController: UIViewController, ScrollViewDelegate {
     private lazy var scrollView = ScrollView(viewModel: viewModel)
     
     // MARK: - UI Components
-
+    
     @objc func openDetailWithSafari() {
         openWithSafari(urlString: viewModel.coin.coinrankingURL)
     }
-  
+    
     private func openWithSafari(urlString: String?) {
         if let urlString = urlString, let url = URL(string: urlString) {
             let safariController = SFSafariViewController(url: url)
@@ -46,6 +46,21 @@ class DetailController: UIViewController, ScrollViewDelegate {
         setupUIConfigurations()
         setupUIConstraints()
         scrollView.customDelegate = self
+        
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareCoinURL))
+        navigationItem.rightBarButtonItem = shareButton
+    }
+    
+    @objc private func shareCoinURL() {
+        guard let coinURLString = viewModel.coin.coinrankingURL,
+              let coinURL = URL(string: coinURLString) else {
+            return
+        }
+        
+        let defaultText = "Look what I found: \(coinURL)"
+        
+        let activityViewController = UIActivityViewController(activityItems: [defaultText], applicationActivities: nil)
+        present(activityViewController, animated: true, completion: nil)
     }
     
     // MARK: - UI Setup
@@ -67,18 +82,18 @@ class DetailController: UIViewController, ScrollViewDelegate {
     
     private func setupUIConstraints() {
         view.addSubview(scrollView)
-
+        
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-    
+        
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
-//            scrollView.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor),
-//            scrollView.widthAnchor.constraint(equalTo: view.widthAnchor)
+            //            scrollView.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor),
+            //            scrollView.widthAnchor.constraint(equalTo: view.widthAnchor)
         ])
-
+        
     }
 }
 
