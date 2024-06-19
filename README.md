@@ -20,6 +20,7 @@
 | -------- | -------- |
 | ![HomeScreen](https://github.com/guraygul/CoinCo/assets/58820744/91163e6a-b7e2-4ae3-bd2a-c63c16677825) | ![DetailScreen](https://github.com/guraygul/CoinCo/assets/58820744/c24fb608-0b32-499c-b5c5-33bb2fa3125e) | 
 
+## Screens
 #### Browse Coins:
 - Explore the Crypto world
 - The Crypto datas are fetching from an Mock API so they are not real-time.
