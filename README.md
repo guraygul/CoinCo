@@ -4,6 +4,8 @@
 ## Table Of Contents
 - [Features](#features)
   - [In app Gifs](#in-app-gifs)
+  - [Screens](#screens)
+  - [Used Technologies](#used-technologies)
   - [Tech Stack](#tech-stack)
   - [Architecture](#architecture)
 - [Getting Started](#getting-started)
@@ -13,6 +15,11 @@
 - [Nice to have](#nice-to-have)
 
 ## Features
+## In app Gifs
+| Home Screen | Detail Screen |
+| -------- | -------- |
+| ![HomeScreen](https://github.com/guraygul/CoinCo/assets/58820744/91163e6a-b7e2-4ae3-bd2a-c63c16677825) | ![DetailScreen](https://github.com/guraygul/CoinCo/assets/58820744/c24fb608-0b32-499c-b5c5-33bb2fa3125e) | 
+
 #### Browse Coins:
 - Explore the Crypto world
 - The Crypto datas are fetching from an Mock API so they are not real-time.
@@ -21,10 +28,13 @@
 - Learn more about coins with graphs and additional informations
 - Share your favorite coins with your friends
 
-## In app Gifs
-| Home Screen | Detail Screen |
-| -------- | -------- |
-| ![HomeScreen](https://github.com/guraygul/CoinCo/assets/58820744/91163e6a-b7e2-4ae3-bd2a-c63c16677825) | ![DetailScreen](https://github.com/guraygul/CoinCo/assets/58820744/c24fb608-0b32-499c-b5c5-33bb2fa3125e) | 
+## Used Technologies
+- UIKit
+- MVVM
+- Programmatic UI
+- SafariServices
+- Alamofire
+- SDWebImage
 
 ## Tech Stack
 - Xcode: Version 15.3
